@@ -3,362 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automated Inventory Management System (IMS) | Shubham Kumar</title>
+    <title>Inventory Management System | Shubham Garg</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        :root {
-            --bg-main: #0B0F19;
-            --bg-card: #151D30;
-            --accent-blue: #38BDF8;
-            --text-primary: #F3F4F6;
-            --text-secondary: #9CA3AF;
-            --border-color: #24324F;
-            --font-sans: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+        :root{
+            --bg:#0B0F19;--card:#151D30;--card2:#0F172A;
+            --accent:#38BDF8;--accent-dim:rgba(56,189,248,.12);--accent-glow:rgba(56,189,248,.25);
+            --green:#22C55E;--green-dim:rgba(34,197,94,.12);
+            --red:#EF4444;--red-dim:rgba(239,68,68,.1);
+            --amber:#F59E0B;--amber-dim:rgba(245,158,11,.1);
+            --purple:#818CF8;--purple-dim:rgba(129,140,248,.1);
+            --t1:#F3F4F6;--t2:#9CA3AF;--t3:#6B7280;
+            --border:#1E2D45;--border-light:#24324F;
+            --sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;--r:10px;
         }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--t1);font-family:var(--sans);line-height:1.65;padding-bottom:5rem}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:var(--bg)}
+        ::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* NAV */
+        nav{position:fixed;top:0;left:0;width:100%;background:rgba(11,15,25,.92);
+            backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:1000;
+            display:flex;justify-content:space-between;align-items:center;padding:1rem 5%}
+        .nav-logo{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--t1);
+            display:flex;align-items:center;gap:.5rem;text-decoration:none}
+        .nav-logo i{color:var(--accent)}
+        .nav-links{display:flex;list-style:none;gap:1.75rem}
+        .nav-links a{color:var(--t2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .25s}
+        .nav-links a:hover{color:var(--accent)}
+        .nav-back{display:inline-flex;align-items:center;gap:.5rem;color:var(--t2);text-decoration:none;
+            font-family:var(--mono);font-size:.8rem;background:var(--card);
+            border:1px solid var(--border);padding:.4rem .9rem;border-radius:6px;transition:all .25s}
+        .nav-back:hover{color:var(--accent);border-color:var(--accent)}
 
-        body {
-            background: var(--bg-main);
-            color: var(--text-primary);
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            padding-bottom: 5rem;
-        }
+        /* LAYOUT */
+        .container{max-width:1100px;margin:0 auto;padding:6rem 2rem 2rem}
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 2rem;
-        }
+        /* HERO CARD */
+        .proj-hero{padding:2.5rem;background:var(--card);border:1px solid var(--border);
+            border-radius:var(--r);margin-bottom:2rem;position:relative;overflow:hidden}
+        .eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2.5px;margin-bottom:.6rem;display:block}
+        .proj-title{font-size:2.1rem;font-weight:800;margin-bottom:1rem;line-height:1.15}
+        .proj-summary{color:var(--t2);font-size:.98rem;max-width:780px;line-height:1.75}
+        .pill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem}
+        .pill{font-family:var(--mono);font-size:.73rem;background:#1E293B;color:var(--accent);
+            padding:.28rem .65rem;border-radius:5px;border:1px solid var(--border)}
+        .pill.green{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,.25)}
+        .pill.amber{color:var(--amber);background:var(--amber-dim);border-color:rgba(245,158,11,.25)}
+        .pill.purple{color:var(--purple);background:var(--purple-dim);border-color:rgba(129,140,248,.25)}
 
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: .5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-family: var(--font-mono);
-            margin-bottom: 2rem;
-            transition: .3s;
-        }
+        /* KPI ROW */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+        .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.5rem;position:relative;overflow:hidden;text-align:center}
+        .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+        .kpi.blue::before{background:var(--accent)}
+        .kpi.green::before{background:var(--green)}
+        .kpi.amber::before{background:var(--amber)}
+        .kpi.purple::before{background:var(--purple)}
+        .kpi-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;margin-bottom:.25rem}
+        .kpi.blue .kpi-val{color:var(--accent)}
+        .kpi.green .kpi-val{color:var(--green)}
+        .kpi.amber .kpi-val{color:var(--amber)}
+        .kpi.purple .kpi-val{color:var(--purple)}
+        .kpi-label{font-size:.8rem;color:var(--t2)}
 
-        .back-link:hover {
-            color: var(--accent-blue);
-        }
+        /* DASHBOARD FRAME */
+        .frame-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:2rem;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .frame-bar{background:var(--card2);padding:.85rem 1.25rem;
+            display:flex;justify-content:space-between;align-items:center;
+            font-family:var(--mono);font-size:.76rem;color:var(--t2)}
+        .frame-bar.top{border-bottom:1px solid var(--border)}
+        .frame-bar.bottom{border-top:1px solid var(--border)}
+        .fdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.4rem}
+        .fdot.blue{background:var(--accent)}
+        .fdot.green{background:var(--green)}
+        .iframe-std{position:relative;width:100%;padding-bottom:56.25%;background:var(--card2)}
+        .iframe-std iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .iframe-tall{position:relative;width:100%;height:650px;background:var(--card2)}
+        .iframe-tall iframe{width:100%;height:100%;border:none}
 
-        .project-header {
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 2rem;
-        }
+        /* SECTION */
+        .sec{margin-bottom:1.75rem}
+        .sec-label{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2px;margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+        .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+        .sec-title{font-size:1.35rem;font-weight:700;margin-bottom:.3rem}
+        .sec-sub{font-size:.9rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.6}
 
-        .project-tag {
-            font-family: var(--font-mono);
-            color: var(--accent-blue);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: .85rem;
-        }
+        /* STORY GRID */
+        .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+        .story-card{border-radius:var(--r);padding:2rem;border:1px solid var(--border)}
+        .story-card.problem{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.2)}
+        .story-card.solution{background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.2)}
+        .story-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+        .sicon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+            justify-content:center;font-size:.95rem;flex-shrink:0}
+        .problem .sicon{background:var(--red-dim);color:var(--red)}
+        .solution .sicon{background:var(--green-dim);color:var(--green)}
+        .story-head h3{font-size:1rem;font-weight:700}
+        .problem .story-head h3{color:var(--red)}
+        .solution .story-head h3{color:var(--green)}
+        .story-intro{font-size:.88rem;color:var(--t2);margin-bottom:1.25rem;line-height:1.65}
+        .ps-list{list-style:none;display:flex;flex-direction:column;gap:.9rem}
+        .ps-item{display:flex;gap:.85rem;align-items:flex-start}
+        .psdot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+            justify-content:center;font-size:.65rem;margin-top:3px}
+        .problem .psdot{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+        .solution .psdot{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+        .ps-text strong{display:block;font-size:.88rem;color:var(--t1);margin-bottom:.18rem}
+        .ps-text p{font-size:.83rem;color:var(--t2);line-height:1.55}
 
-        .project-title {
-            font-size: 2.6rem;
-            font-weight: 800;
-            margin-top: .5rem;
-        }
+        /* IMPACT SECTION */
+        .impact-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem}
+        .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem}
+        .impact-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+        .impact-card i{font-size:1.15rem;margin-bottom:.7rem;display:block;color:var(--accent)}
+        .impact-card h4{font-size:.9rem;font-weight:600;margin-bottom:.35rem}
+        .impact-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
 
-        .tech-row {
-            display: flex;
-            gap: .75rem;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
+        /* FEATURES GRID */
+        .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
+        .feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;
+            transition:border-color .25s}
+        .feat-card:hover{border-color:var(--accent)}
+        .feat-icon{width:38px;height:38px;background:var(--accent-dim);
+            border:1px solid rgba(56,189,248,.2);border-radius:8px;display:flex;
+            align-items:center;justify-content:center;color:var(--accent);font-size:.95rem;flex-shrink:0}
+        .feat-card h4{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+        .feat-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
 
-        .tech-badge {
-            background: #1E293B;
-            color: var(--accent-blue);
-            border: 1px solid var(--border-color);
-            padding: .4rem .8rem;
-            border-radius: 6px;
-            font-size: .8rem;
-            font-family: var(--font-mono);
-        }
+        /* CLIENT BANNER */
+        .client-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.75rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem}
+        .client-logo-box{border-radius:8px;padding:.4rem .85rem;
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;height:44px}
+        .client-logo-box img{height:32px;width:auto;display:block}
+        .client-info strong{font-size:.92rem}
+        .client-info p{color:var(--t2);font-size:.83rem;margin-top:.2rem}
 
-        .dashboard-frame-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,.4);
-            margin-bottom: 3rem;
-        }
-
-        .frame-header {
-            background: #0F172A;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: var(--font-mono);
-            color: var(--text-secondary);
-            font-size: .8rem;
-        }
-
-        .screenshot-container {
-            background: #0F172A;
-            text-align: center;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .screenshot-container img {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-        }
-
-        .case-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .case-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 2rem;
-        }
-
-        .case-card h3 {
-            display: flex;
-            align-items: center;
-            gap: .75rem;
-            margin-bottom: 1rem;
-        }
-
-        .case-card h3 i {
-            color: var(--accent-blue);
-        }
-
-        .case-card p,
-        .case-card li {
-            color: var(--text-secondary);
-        }
-
-        .timeline-bullets {
-            margin-top: 1rem;
-            list-style: none;
-        }
-
-        .timeline-bullets li {
-            margin-bottom: 1.75rem;
-            list-style: none;
-        }
-
-        .bullet-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 6px;
-        }
-
-        .bullet-desc {
-            color: var(--text-secondary);
-            padding-left: 28px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        /* Custom size controller for the live IMS operational portal */
-        .ims-iframe-override {
-            position: relative;
-            width: 100%;
-            height: 650px; /* Forces a tall, expansive height so the dashboard doesn't squish */
-            background: #0F172A;
-            border: none;
-}
-
-        .timeline-bullets strong {
-            color: var(--text-primary);
-        }
-
+        /* RESPONSIVE */
         @media(max-width:768px){
-            .case-grid {
-                grid-template-columns: 1fr;
-            }
-            .project-title {
-                font-size: 2rem;
-            }
-            .frame-header {
-                flex-direction: column;
-                gap: .5rem;
-            }
+            .kpi-row{grid-template-columns:1fr 1fr}
+            .story-grid{grid-template-columns:1fr}
+            .impact-grid{grid-template-columns:1fr}
+            .feat-grid{grid-template-columns:1fr}
+            .proj-title{font-size:1.65rem}
+            nav{padding:.9rem 5%}
+            .nav-links{display:none}
+            .client-banner{flex-direction:column;align-items:flex-start}
         }
+        .proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+            background:linear-gradient(90deg,var(--accent),var(--purple))}
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <!-- Return Link -->
-        <a href="index.html#projects" class="back-link">
-            <i class="fa-solid fa-arrow-left"></i> Return to Portfolio
-        </a>
 
-        <!-- Main Header -->
-        <div class="project-header">
-            <span class="project-tag">Case Study // Full-Stack Web App Automation</span>
-            <h1 class="project-title">Inventory Management System (IMS)</h1>
+<nav>
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-chart-network"></i> SHUBHAM GARG</a>
+    <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="index.html#projects" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Projects</a>
+</nav>
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="proj-hero">
+        <span class="eyebrow">Case Study &nbsp;// &nbsp;Google Apps Script &nbsp;·&nbsp; Web App &nbsp;·&nbsp; Google Sheets DB</span>
+        <h1 class="proj-title">Automated Inventory Management System (IMS)</h1>
+        <div class="pill-row">
+            <span class="pill"><i class="fa-solid fa-code" style="margin-right:.35rem"></i>Google Apps Script</span>
+            <span class="pill"><i class="fa-solid fa-table" style="margin-right:.35rem"></i>Google Sheets DB</span>
+            <span class="pill"><i class="fa-solid fa-cloud" style="margin-right:.35rem"></i>Web App Deployment</span>
+            <span class="pill"><i class="fa-solid fa-chart-column" style="margin-right:.35rem"></i>Real-time KPIs</span>
+            <span class="pill green">↓ 80% Manual Operations</span>
+            <span class="pill green">✓ 100% Stock Control</span>
+            <span class="pill amber">Live Production System</span>
         </div>
+        <p class="proj-summary">A trading firm managing Electronics, Stationery, and Furniture had zero digital control over inventory — everything was manual, scattered, and unreliable. This system replaced all of that with a single live portal giving the operations team real-time visibility into every unit, transaction, and stock alert.</p>
+    </div>
 
-        <!-- Technical Application Row -->
-        <div class="tech-row">
-            <span class="tech-badge"><i class="fa-solid fa-code"></i> Google Apps Script</span>
-            <span class="tech-badge"><i class="fa-solid fa-cloud"></i> Web App Deployment</span>
-            <span class="tech-badge"><i class="fa-solid fa-table"></i> Google Sheets DB</span>
-            <span class="tech-badge"><i class="fa-solid fa-chart-column"></i> Real-time KPIs</span>
+    <!-- KPIs -->
+    <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-val">80%</div><div class="kpi-label">Reduction in Manual Work</div></div>
+        <div class="kpi green"><div class="kpi-val">100%</div><div class="kpi-label">Stock Visibility</div></div>
+        <div class="kpi amber"><div class="kpi-val">₹18.6L</div><div class="kpi-label">Inventory Value Tracked</div></div>
+        <div class="kpi purple"><div class="kpi-val">233</div><div class="kpi-label">Units Monitored Live</div></div>
+    </div>
 
-            <span class="tech-badge">↓ 80% Manual Operations</span>
-            <span class="tech-badge">✓ 100% Stock Control</span>
+    <!-- LIVE PORTAL -->
+    <div class="frame-wrap">
+        <div class="frame-bar top">
+            <span><span class="fdot blue"></span>Live Production Portal — Inventory Management System</span>
+            <span>Google Apps Script Web App &nbsp;·&nbsp; v2.1.0</span>
         </div>
-
-        <!-- 1. ACTUAL DASHBOARD APP PREVIEWS SHOWCASE FIRST -->
-        <div class="dashboard-frame-wrapper">
-            <div class="frame-header">
-                <span><i class="fa-solid fa-circle" style="color: #38BDF8; margin-right: 0.4rem;"></i> UI Interface // Live Production System Layout</span>
-                <span>Google Web App Portal View</span>
-            </div>
-            
-            <div class="responsive-iframe-container">
-                <iframe 
-                    src="https://script.google.com/macros/s/AKfycbwo2tZjM327Uwcsd1fGtJLCkJxkLa8WjOh1O51i6aLCzrnnH923ywAyMUTjRzPfxvEvqg/exec?embed=true" 
-                    class="ims-iframe-override"
-                    allowfullscreen 
-                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-forms">
-                </iframe>
-            </div>
-
-            <div class="frame-header" style="background: #0F172A; border-top: 1px solid var(--border-color); font-size: 0.8rem;">
-                <span><i class="fa-solid fa-shield-halved" style="color: #22C55E; margin-right: 0.4rem;"></i> Secure custom enterprise administrative portal</span>
-                <span>Active Stack v2.1.0</span>
-            </div>
+        <div class="iframe-tall">
+            <iframe src="https://script.google.com/macros/s/AKfycbxvUH0Pu2pUoYGao7rESYd4Z8H5c5RbySYx4nW2jrq4s3q4c69fF0620mBUsGs47qLuzg/exec?embed=true"
+                allowfullscreen
+                sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-forms">
+            </iframe>
         </div>
-
-        <!-- 2. PROBLEM & SOLUTION METHODOLOGY CARDS -->
-        <div class="case-grid">
-            
-            <!-- THE BUSINESS PROBLEM (RED WARNING THEME) -->
-            <div class="case-card">
-                <h3>
-                    <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i> The Business Problem
-                </h3>
-                <p style="margin-bottom: 1.5rem;">
-                    A trading firm handling various business products (Electronics, Stationery, Furniture) struggled with manually logging transactions across scattered data sheets. This led to serious operational inefficiencies:
-                </p>
-                <ul class="timeline-bullets">
-                    
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
-                            <strong>Blind Stock Allocations:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            The operations team had no quick visual summary of total item configurations or overall valuation metrics, making it difficult to track high-value business assets.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
-                            <strong>Untracked Inventory Leakage:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Without an active transaction history log, it was nearly impossible to verify who processed specific "Stock In" or "Stock Out" actions, causing balance issues.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
-                            <strong>Unnoticed Stock Depletion:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            The warehouse frequently ran out of popular items (like USB Hubs or components) because they lacked automated alerts to signal when stock hit critical levels.
-                        </p>
-                    </li>
-
-                </ul>
-            </div>
-
-            <!-- THE SOLUTION ARCHITECTED (GREEN CHECK THEME) -->
-            <div class="case-card">
-                <h3>
-                    <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i> The Solution & Business Impact
-                </h3>
-                <p style="margin-bottom: 1.5rem;">
-                    I built a custom web app using Google Apps Script that works as a complete administrative panel. It connects directly with our database sheets to manage and track everything smoothly:
-                </p>
-                <ul class="timeline-bullets">
-                    
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">Centralized Executive View Control:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Engineered dynamic dashboard counters showing live counts (Total Value: ₹18,65,940, Available Stock: 233 units) for immediate operational awareness.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">Automated Stock Logging System:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Implemented a structured "Recent Transactions" tracking ledger that captures precisely what items left or entered the system, complete with execution timestamps and user accounts.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">Visual Low-Stock Safeguards:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Created a dedicated "Low Stock Items" visual status engine that highlights critical levels (e.g., 2/5 units remaining) using active color warnings to stop supply shortages before they happen.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">Complete Management Control Panel:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Designed an intuitive system menu panel including Inventory Master, Stock In/Out, Transfers, Vendor tracking, Documents, and System Alerts.
-                        </p>
-                    </li>
-
-                </ul>
-            </div>
-
+        <div class="frame-bar bottom">
+            <span><i class="fa-solid fa-shield-halved" style="color:var(--green);margin-right:.4rem"></i>Secure enterprise admin portal — read-only demo access</span>
+            <span>Stack v2.1.0 &nbsp;·&nbsp; Active</span>
         </div>
     </div>
+
+    <!-- STORY -->
+    <div class="sec">
+        <div class="sec-label">The Full Story</div>
+        <div class="sec-title">Problem → Solution → Real Business Impact</div>
+        <div class="sec-sub">What was broken, how I fixed it, and what measurably changed for the business afterwards.</div>
+    </div>
+
+    <div class="story-grid">
+        <div class="story-card problem">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>What Was Breaking the Business</h3>
+            </div>
+            <p class="story-intro">A trading firm handling 3 product categories had no digital control over their inventory. Everything was manual, scattered across Excel files, and completely unreliable — costing time, money, and stock.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>No Real-Time Stock Visibility</strong>
+                        <p>The operations team had no way to quickly see available units, total stock value, or which items were running low — they had to manually count or search spreadsheets every time.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Inventory Leakage With No Paper Trail</strong>
+                        <p>Stock moved in and out with no proper log. There was no way to verify who processed a transaction, when it happened, or what quantity — making it impossible to catch mistakes or theft.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Products Running Out Silently</strong>
+                        <p>Popular items would hit zero units with zero warning. Staff discovered shortages only when a customer asked — by then it was too late, causing lost sales and delayed orders.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Vendor & Transfer Management Was Chaotic</strong>
+                        <p>No system tracked which vendor supplied which items, or managed stock transfers between locations. Everything depended on memory and scattered files.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="story-card solution">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3>What I Built to Solve It</h3>
+            </div>
+            <p class="story-intro">I built a complete custom web application using Google Apps Script, deployed as a live portal connected directly to a Google Sheets database — no additional software costs, no IT infrastructure needed.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Live Executive Dashboard with Real-Time Counters</strong>
+                        <p>Dynamic KPI counters showing Total Stock Value (₹18,65,940), Available Units (233), and category breakdowns — updating live so management always has an accurate picture instantly.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Timestamped Transaction Log System</strong>
+                        <p>Every Stock In and Stock Out action is automatically recorded with item name, quantity, timestamp, and user account — a full audit trail that catches errors and eliminates leakage.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Visual Low-Stock Alert Engine</strong>
+                        <p>A dedicated "Low Stock" panel with colour-coded warnings (e.g. 2/5 units remaining shown in red) so staff can reorder before products run out — not after customers complain.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Full Management Control Panel</strong>
+                        <p>Complete admin menu covering Inventory Master, Stock In/Out, Transfers, Vendor tracking, Documents, and System Alerts — all in one portal accessible from any browser.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- BUSINESS IMPACT -->
+    <div class="impact-wrap">
+        <div class="sec-label">Real Business Impact</div>
+        <div class="sec-title">What Actually Changed After Going Live</div>
+        <p class="sec-sub" style="margin-bottom:0">Concrete, day-to-day improvements the business experienced once the IMS was deployed in production.</p>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <i class="fa-solid fa-bolt"></i>
+                <h4>Operations Team Works 80% Faster</h4>
+                <p>Tasks that used to take 30–45 minutes of manual spreadsheet work now take under 2 minutes in the portal — stock checks, transaction logging, everything.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <h4>Full Audit Trail for Every Transaction</h4>
+                <p>Management can pull up exactly who moved stock, how much, and when — for any item, any date. Disputes resolved in seconds instead of hours of searching.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-bell"></i>
+                <h4>Zero Surprise Stockouts</h4>
+                <p>The low-stock alert system gives advance warning before items run out — so reorders happen proactively. Lost sales due to empty shelves dropped to near zero.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+                <h4>₹18.6L of Inventory Fully Tracked</h4>
+                <p>Every rupee of stock is accounted for in real time. Management knows the exact inventory value at any moment — enabling smarter purchasing decisions.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h4>Stock Leakage Eliminated</h4>
+                <p>The timestamped transaction log created accountability for every movement. Unexplained stock discrepancies — which were common before — essentially disappeared.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-globe"></i>
+                <h4>Accessible from Anywhere, Zero Extra Cost</h4>
+                <p>Built entirely on Google Workspace — which the business already used. No new licenses, no server costs. The portal runs in any browser, on any device.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="sec">
+        <div class="sec-label">System Modules</div>
+        <div class="sec-title">What's Inside the Portal</div>
+        <div class="sec-sub">Every module built into the Inventory Management System.</div>
+    </div>
+    <div class="feat-grid">
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-gauge-high"></i></div><div><h4>Live KPI Dashboard</h4><p>Real-time counters for total stock value, available units, and item counts — updating automatically as transactions are processed.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-arrow-right-arrow-left"></i></div><div><h4>Stock In / Stock Out Module</h4><p>Structured forms for logging inventory movement with automatic timestamp capture, quantity validation, and database write-back.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><div><h4>Recent Transactions Ledger</h4><p>Live log showing the latest stock movements with item name, action type, quantity, date, and user — full traceability for every entry.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div><h4>Low Stock Alert Panel</h4><p>Colour-coded warnings highlighting items below minimum threshold — so restocking happens before shortages reach customers.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-truck"></i></div><div><h4>Vendor Management</h4><p>Track supplier relationships, link items to vendors, and maintain a structured record of all procurement contacts and histories.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-boxes-stacked"></i></div><div><h4>Inventory Master & Transfers</h4><p>Central item registry with full product details, plus a transfer module for moving stock between locations with a logged paper trail.</p></div></div>
+    </div>
+
+</div>
 </body>
 </html>

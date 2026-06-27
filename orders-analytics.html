@@ -3,430 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Order & Payment Intelligence Dashboard | Shubham Kumar</title>
+    <title>Client Order & Payment Intelligence Dashboard | Shubham Garg</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        :root {
-            --bg-main: #0B0F19;
-            --bg-card: #151D30;
-            --accent-blue: #38BDF8;
-            --text-primary: #F3F4F6;
-            --text-secondary: #9CA3AF;
-            --border-color: #24324F;
-            --font-sans: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+        :root{
+            --bg:#0B0F19;--card:#151D30;--card2:#0F172A;
+            --accent:#38BDF8;--accent-dim:rgba(56,189,248,.12);--accent-glow:rgba(56,189,248,.25);
+            --green:#22C55E;--green-dim:rgba(34,197,94,.12);
+            --red:#EF4444;--red-dim:rgba(239,68,68,.1);
+            --amber:#F59E0B;--amber-dim:rgba(245,158,11,.1);
+            --purple:#818CF8;--purple-dim:rgba(129,140,248,.1);
+            --t1:#F3F4F6;--t2:#9CA3AF;--t3:#6B7280;
+            --border:#1E2D45;--border-light:#24324F;
+            --sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;--r:10px;
         }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--t1);font-family:var(--sans);line-height:1.65;padding-bottom:5rem}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:var(--bg)}
+        ::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* NAV */
+        nav{position:fixed;top:0;left:0;width:100%;background:rgba(11,15,25,.92);
+            backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:1000;
+            display:flex;justify-content:space-between;align-items:center;padding:1rem 5%}
+        .nav-logo{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--t1);
+            display:flex;align-items:center;gap:.5rem;text-decoration:none}
+        .nav-logo i{color:var(--accent)}
+        .nav-links{display:flex;list-style:none;gap:1.75rem}
+        .nav-links a{color:var(--t2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .25s}
+        .nav-links a:hover{color:var(--accent)}
+        .nav-back{display:inline-flex;align-items:center;gap:.5rem;color:var(--t2);text-decoration:none;
+            font-family:var(--mono);font-size:.8rem;background:var(--card);
+            border:1px solid var(--border);padding:.4rem .9rem;border-radius:6px;transition:all .25s}
+        .nav-back:hover{color:var(--accent);border-color:var(--accent)}
 
-        body {
-            background: var(--bg-main);
-            color: var(--text-primary);
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            padding-bottom: 5rem;
-        }
+        /* LAYOUT */
+        .container{max-width:1100px;margin:0 auto;padding:6rem 2rem 2rem}
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 2rem;
-        }
+        /* HERO CARD */
+        .proj-hero{padding:2.5rem;background:var(--card);border:1px solid var(--border);
+            border-radius:var(--r);margin-bottom:2rem;position:relative;overflow:hidden}
+        .eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2.5px;margin-bottom:.6rem;display:block}
+        .proj-title{font-size:2.1rem;font-weight:800;margin-bottom:1rem;line-height:1.15}
+        .proj-summary{color:var(--t2);font-size:.98rem;max-width:780px;line-height:1.75}
+        .pill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem}
+        .pill{font-family:var(--mono);font-size:.73rem;background:#1E293B;color:var(--accent);
+            padding:.28rem .65rem;border-radius:5px;border:1px solid var(--border)}
+        .pill.green{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,.25)}
+        .pill.amber{color:var(--amber);background:var(--amber-dim);border-color:rgba(245,158,11,.25)}
+        .pill.purple{color:var(--purple);background:var(--purple-dim);border-color:rgba(129,140,248,.25)}
 
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: .5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-family: var(--font-mono);
-            margin-bottom: 2rem;
-            transition: .3s;
-        }
+        /* KPI ROW */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+        .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.5rem;position:relative;overflow:hidden;text-align:center}
+        .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+        .kpi.blue::before{background:var(--accent)}
+        .kpi.green::before{background:var(--green)}
+        .kpi.amber::before{background:var(--amber)}
+        .kpi.purple::before{background:var(--purple)}
+        .kpi-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;margin-bottom:.25rem}
+        .kpi.blue .kpi-val{color:var(--accent)}
+        .kpi.green .kpi-val{color:var(--green)}
+        .kpi.amber .kpi-val{color:var(--amber)}
+        .kpi.purple .kpi-val{color:var(--purple)}
+        .kpi-label{font-size:.8rem;color:var(--t2)}
 
-        .back-link:hover {
-            color: var(--accent-blue);
-        }
+        /* DASHBOARD FRAME */
+        .frame-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:2rem;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .frame-bar{background:var(--card2);padding:.85rem 1.25rem;
+            display:flex;justify-content:space-between;align-items:center;
+            font-family:var(--mono);font-size:.76rem;color:var(--t2)}
+        .frame-bar.top{border-bottom:1px solid var(--border)}
+        .frame-bar.bottom{border-top:1px solid var(--border)}
+        .fdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.4rem}
+        .fdot.blue{background:var(--accent)}
+        .fdot.green{background:var(--green)}
+        .iframe-std{position:relative;width:100%;padding-bottom:56.25%;background:var(--card2)}
+        .iframe-std iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .iframe-tall{position:relative;width:100%;height:650px;background:var(--card2)}
+        .iframe-tall iframe{width:100%;height:100%;border:none}
 
-        .project-header {
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 2rem;
-        }
+        /* SECTION */
+        .sec{margin-bottom:1.75rem}
+        .sec-label{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2px;margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+        .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+        .sec-title{font-size:1.35rem;font-weight:700;margin-bottom:.3rem}
+        .sec-sub{font-size:.9rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.6}
 
-        .project-tag {
-            font-family: var(--font-mono);
-            color: var(--accent-blue);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: .85rem;
-        }
+        /* STORY GRID */
+        .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+        .story-card{border-radius:var(--r);padding:2rem;border:1px solid var(--border)}
+        .story-card.problem{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.2)}
+        .story-card.solution{background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.2)}
+        .story-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+        .sicon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+            justify-content:center;font-size:.95rem;flex-shrink:0}
+        .problem .sicon{background:var(--red-dim);color:var(--red)}
+        .solution .sicon{background:var(--green-dim);color:var(--green)}
+        .story-head h3{font-size:1rem;font-weight:700}
+        .problem .story-head h3{color:var(--red)}
+        .solution .story-head h3{color:var(--green)}
+        .story-intro{font-size:.88rem;color:var(--t2);margin-bottom:1.25rem;line-height:1.65}
+        .ps-list{list-style:none;display:flex;flex-direction:column;gap:.9rem}
+        .ps-item{display:flex;gap:.85rem;align-items:flex-start}
+        .psdot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+            justify-content:center;font-size:.65rem;margin-top:3px}
+        .problem .psdot{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+        .solution .psdot{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+        .ps-text strong{display:block;font-size:.88rem;color:var(--t1);margin-bottom:.18rem}
+        .ps-text p{font-size:.83rem;color:var(--t2);line-height:1.55}
 
-        .project-title {
-            font-size: 2.6rem;
-            font-weight: 800;
-            margin-top: .5rem;
-        }
+        /* IMPACT SECTION */
+        .impact-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem}
+        .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem}
+        .impact-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+        .impact-card i{font-size:1.15rem;margin-bottom:.7rem;display:block;color:var(--accent)}
+        .impact-card h4{font-size:.9rem;font-weight:600;margin-bottom:.35rem}
+        .impact-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
 
-        .tech-row {
-            display: flex;
-            gap: .75rem;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
+        /* FEATURES GRID */
+        .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
+        .feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;
+            transition:border-color .25s}
+        .feat-card:hover{border-color:var(--accent)}
+        .feat-icon{width:38px;height:38px;background:var(--accent-dim);
+            border:1px solid rgba(56,189,248,.2);border-radius:8px;display:flex;
+            align-items:center;justify-content:center;color:var(--accent);font-size:.95rem;flex-shrink:0}
+        .feat-card h4{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+        .feat-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
 
-        .tech-badge {
-            background: #1E293B;
-            color: var(--accent-blue);
-            border: 1px solid var(--border-color);
-            padding: .4rem .8rem;
-            border-radius: 6px;
-            font-size: .8rem;
-            font-family: var(--font-mono);
-        }
+        /* CLIENT BANNER */
+        .client-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.75rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem}
+        .client-logo-box{border-radius:8px;padding:.4rem .85rem;
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;height:44px}
+        .client-logo-box img{height:32px;width:auto;display:block}
+        .client-info strong{font-size:.92rem}
+        .client-info p{color:var(--t2);font-size:.83rem;margin-top:.2rem}
 
-        /* Unified System Console Wrapper */
-        .dashboard-frame-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,.4);
-            margin-bottom: 3rem;
-        }
-
-        .frame-header {
-            background: #0F172A;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: var(--font-mono);
-            color: var(--text-secondary);
-            font-size: .8rem;
-        }
-
-        .screenshot-container {
-            background: #0F172A;
-            text-align: center;
-            padding: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 1px dashed var(--border-color);
-        }
-
-        .screenshot-container img {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-        }
-
-        /* Live Dashboard Embed Node */
-        .responsive-iframe-container {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* Perfect 16:9 Dashboard Ratio */
-            background: #0F172A;
-        }
-
-        .responsive-iframe-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        /* Business Intel Layout Grid */
-        .case-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .case-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 2rem;
-        }
-
-        .case-card h3 {
-            display: flex;
-            align-items: center;
-            gap: .75rem;
-            margin-bottom: 1rem;
-        }
-
-        .case-card h3 i {
-            color: var(--accent-blue);
-        }
-
-        .case-card p,
-        .case-card li {
-            color: var(--text-secondary);
-        }
-
-        /* Tidy up the list formatting */
-        .timeline-bullets li {
-            list-style: none;
-            margin-bottom: 1.75rem; /* Balanced spacing between each item block */
-        }
-
-        /* Forces icon and heading text to stay side-by-side on one single line */
-        .bullet-header {
-            display: flex;
-            align-items: center; /* Vertically centers the icon with the text */
-            gap: 12px;           /* Spaces the icon perfectly away from the heading */
-            margin-bottom: 6px;  /* Clean gap before the explanation drops beneath */
-        }
-
-        /* Style for the explanation text sitting on the next line */
-        .bullet-desc {
-            color: var(--text-secondary);
-            padding-left: 28px;  /* Indents text beautifully right beneath the words */
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        /* Tidy up the list formatting */
-        .timeline-bullets li {
-            list-style: none;
-            margin-bottom: 1.75rem; /* Balanced spacing between each item block */
-        }
-
-        .timeline-bullets strong {
-            color: var(--text-primary);
-        }
-
-        .bullet-icon {
-            margin-right: 10px;
-            font-size: 1rem;
-        }
-
-        .bullet-text-wrapper {
-            display: inline-block;
-            vertical-align: top;
-            width: calc(100% - 30px);
-        }
-
+        /* RESPONSIVE */
         @media(max-width:768px){
-            .case-grid {
-                grid-template-columns: 1fr;
-            }
-            .project-title {
-                font-size: 2rem;
-            }
-            .frame-header {
-                flex-direction: column;
-                gap: .5rem;
-            }
+            .kpi-row{grid-template-columns:1fr 1fr}
+            .story-grid{grid-template-columns:1fr}
+            .impact-grid{grid-template-columns:1fr}
+            .feat-grid{grid-template-columns:1fr}
+            .proj-title{font-size:1.65rem}
+            nav{padding:.9rem 5%}
+            .nav-links{display:none}
+            .client-banner{flex-direction:column;align-items:flex-start}
         }
+        .proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+            background:linear-gradient(90deg,var(--accent),var(--purple))}
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <!-- Return Navigation Gateway -->
-        <a href="index.html#projects" class="back-link">
-            <i class="fa-solid fa-arrow-left"></i> Return to Portfolio
-        </a>
 
-        <!-- Document Header Block -->
-        <div class="project-header">
-            <span class="project-tag">Case Study // Business Intelligence System</span>
-            <h1 class="project-title">Client Order & Payment Intelligence Dashboard</h1>
+<nav>
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-chart-network"></i> SHUBHAM GARG</a>
+    <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="index.html#projects" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Projects</a>
+</nav>
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="proj-hero">
+        <span class="eyebrow">Case Study &nbsp;// &nbsp;Business Intelligence &nbsp;·&nbsp; Looker Studio &nbsp;·&nbsp; Revenue Analytics</span>
+        <h1 class="proj-title">Client Order & Payment Intelligence Dashboard</h1>
+        <div class="pill-row">
+            <span class="pill"><i class="fa-solid fa-cart-shopping" style="margin-right:.35rem"></i>Order Tracking</span>
+            <span class="pill"><i class="fa-solid fa-money-bill-wave" style="margin-right:.35rem"></i>Payment Monitoring</span>
+            <span class="pill"><i class="fa-solid fa-users" style="margin-right:.35rem"></i>Client Insights</span>
+            <span class="pill"><i class="fa-solid fa-chart-line" style="margin-right:.35rem"></i>Revenue Analytics</span>
+            <span class="pill green">↑ 40% Faster Follow-Ups</span>
+            <span class="pill green">↓ 75% Search Time</span>
+            <span class="pill green">↓ 60% Manual Work</span>
+            <span class="pill amber">Live BI System</span>
         </div>
+        <p class="proj-summary">As the business scaled its client base, tracking orders, chasing payments, and understanding revenue by channel became a daily struggle. Staff spent more time searching for data than acting on it. This dashboard put every order, payment, and client insight in one place — accessible in seconds, no technical knowledge needed.</p>
+    </div>
 
-        <!-- High Level Tracking Metadata Row -->
-        <div class="tech-row">
-            <span class="tech-badge"><i class="fa-solid fa-cart-shopping"></i> Order Tracking</span>
-            <span class="tech-badge"><i class="fa-solid fa-money-bill-wave"></i> Payment Monitoring</span>
-            <span class="tech-badge"><i class="fa-solid fa-users"></i> Client Insights</span>
-            <span class="tech-badge"><i class="fa-solid fa-chart-line"></i> Revenue Analytics</span>
+    <!-- KPIs -->
+    <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-val">40%</div><div class="kpi-label">Faster Payment Follow-Ups</div></div>
+        <div class="kpi green"><div class="kpi-val">75%</div><div class="kpi-label">Less Time Searching Records</div></div>
+        <div class="kpi amber"><div class="kpi-val">60%</div><div class="kpi-label">Reduction in Manual Reporting</div></div>
+        <div class="kpi purple"><div class="kpi-val">100%</div><div class="kpi-label">Client Payment Visibility</div></div>
+    </div>
 
-            <span class="tech-badge">↑ 40% Faster Follow-Ups</span>
-            <span class="tech-badge">↓ 75% Search Time</span>
-            <span class="tech-badge">↓ 60% Manual Work</span>
-            <span class="tech-badge">✓ 100% Payment Visibility</span>
+    <!-- LIVE DASHBOARD -->
+    <div class="frame-wrap">
+        <div class="frame-bar top">
+            <span><span class="fdot blue"></span>Live Dashboard — Client Order & Payment Intelligence</span>
+            <span>Looker Studio &nbsp;·&nbsp; v1.2.0</span>
         </div>
-
-        <!-- UNIFIED PRODUCTION MONITOR DISPLAY CONSOLE -->
-        <div class="dashboard-frame-wrapper">
-            <div class="frame-header">
-                <span><i class="fa-solid fa-circle" style="color: #38BDF8; margin-right: 0.4rem;"></i> System Interface // Static Image Preview</span>
-                <span>Looker Studio Architecture</span>
-            </div>
-            
-
-            <!-- B. Live Looker Studio Application Embed Node -->
-            <div class="responsive-iframe-container">
-                <iframe
-                    src="https://datastudio.google.com/embed/reporting/6914f44e-30bf-454c-9d77-69c137b4846a/page/BeoXD"
-                    allowfullscreen
-                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                </iframe>
-            </div>
-
-            <div class="frame-header" style="background: #0F172A; border-top: 1px solid var(--border-color); font-size: 0.8rem;">
-                <span><i class="fa-solid fa-lock" style="color: var(--accent-blue); margin-right: 0.4rem;"></i> Data masked for enterprise confidentiality</span>
-                <span>v1.2.0</span>
-            </div>
+        <div class="iframe-std">
+            <iframe src="https://datastudio.google.com/embed/reporting/6914f44e-30bf-454c-9d77-69c137b4846a/page/BeoXD"
+                allowfullscreen
+                sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+            </iframe>
         </div>
-
-        <!-- STRATEGIC DRILL-DOWN DOCUMENTATION CARDS -->
-        <div class="case-grid">
-            
-            <!-- THE BUSINESS PROBLEM BLOCK (UPGRADED WITH CRISP RED CIRCLE ICONS) -->
-            <div class="case-card">
-                <h3>
-                    <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i> The Business Problem
-                </h3>
-                <p style="margin-bottom: 1.5rem;">
-                    As the business scaled, managing client orders, payment records, and website performance became increasingly difficult. Teams were spending valuable time searching through reports instead of making decisions.
-                </p>
-                <ul class="timeline-bullets">
-                    
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
-                            <strong>Payment Tracking Was Slow:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            The team struggled to quickly identify which clients had paid, which invoices were pending, and where follow-up was required.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
-                            <strong>No Quick Access to Client History:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Before accepting a new order, staff had no easy way to check a client's previous payment behavior and reliability.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
-                            <strong>Revenue Visibility Was Limited:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Management could not instantly see which websites, clients, or periods were generating the highest revenue.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
-                            <strong>Historical Records Were Difficult to Find:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Locating past orders and payment transactions often required manually searching through multiple reports.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
-                            <strong>Decision Making Was Delayed:</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Without centralized information, important business decisions relied on incomplete or outdated data.
-                        </p>
-                    </li>
-
-                </ul>
-            </div>
-
-            <!-- SOLUTION ARCHITECTED & METRICS INTERFACE -->
-            <div class="case-card">
-                <h3>
-                    <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i> The Solution & Business Impact
-                </h3>
-                <p style="margin-bottom: 1.5rem;">
-                    I developed a centralized reporting dashboard that provides a complete view of orders, payments, client history, and revenue performance from a single location, helping management make faster and more informed business decisions.
-                </p>
-                <ul class="timeline-bullets">
-                    
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">40% Faster Payment Follow-Ups</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Teams can instantly identify pending and overdue payments, reducing collection delays and improving cash flow.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">75% Less Time Searching Historical Records</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Client orders and payment history can be retrieved within seconds instead of manually reviewing reports.
-                        </p>
-                    </li>
-                    
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">100% Client Payment Visibility</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Management can review complete payment history before accepting new orders from any client.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">30% Faster Business Decisions</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Revenue, orders, and website performance can be analyzed instantly without waiting for manual reports.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">60% Reduction in Manual Reporting</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            All order and payment information is available in one place, eliminating spreadsheet dependency.
-                        </p>
-                    </li>
-
-                    <li>
-                        <div class="bullet-header">
-                            <i class="fa-solid fa-circle-check" style="color: #22C55E;"></i>
-                            <strong style="color: #38BDF8;">Better Revenue Control</strong>
-                        </div>
-                        <p class="bullet-desc">
-                            Track revenue by client, website, and date range to identify the most profitable business channels.
-                        </p>
-                    </li>
-
-                </ul>
-            </div>
-
+        <div class="frame-bar bottom">
+            <span><i class="fa-solid fa-lock" style="color:var(--accent);margin-right:.4rem"></i>Data masked for enterprise confidentiality</span>
+            <span>v1.2.0 &nbsp;·&nbsp; Active</span>
         </div>
     </div>
+
+    <!-- STORY -->
+    <div class="sec">
+        <div class="sec-label">The Full Story</div>
+        <div class="sec-title">Problem → Solution → Real Business Impact</div>
+        <div class="sec-sub">Why the business needed this, what I built, and what measurably improved after launch.</div>
+    </div>
+
+    <div class="story-grid">
+        <div class="story-card problem">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>What Was Slowing the Business Down</h3>
+            </div>
+            <p class="story-intro">A growing business with multiple websites and clients had no central place to see orders, payments, or revenue. Every answer required digging through spreadsheets — costing hours of valuable time every week.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Payment Follow-Ups Were Slow and Missed</strong>
+                        <p>No quick way to see which invoices were pending or overdue. Follow-up reminders were inconsistent and delayed — directly hurting cash flow every month.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Client History Hidden in Spreadsheets</strong>
+                        <p>Before accepting new orders, staff had no easy way to check a client's payment history and reliability — risky clients slipped through because the data was too hard to find quickly.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Revenue Visibility Was Essentially Zero</strong>
+                        <p>Management couldn't instantly see which websites or clients generated the most revenue. Strategic decisions were made on gut feeling rather than data.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Finding Historical Orders Took 20–30 Minutes</strong>
+                        <p>Locating a specific past order or payment required manually scanning multiple reports — a simple lookup could eat half an hour of productive time.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Decisions Made on Incomplete Data</strong>
+                        <p>Without centralized, up-to-date information, management was always working from outdated or partial pictures — slowing decisions and creating costly blind spots.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="story-card solution">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3>What I Built to Solve It</h3>
+            </div>
+            <p class="story-intro">I developed a centralized Looker Studio intelligence dashboard consolidating all order, payment, client, and revenue data into a single live report — accessible to management in one click, no technical knowledge required.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Payment Status at a Glance</strong>
+                        <p>A dedicated payment tracking view shows every client's status — Paid, Pending, or Overdue — with amounts and due dates visible instantly. The team now follows up the same day, not weeks later.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Full Client Payment History Panel</strong>
+                        <p>Search any client and instantly see their complete order and payment history — every transaction, every amount, every status. Unreliable clients are now identified before new orders are accepted.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Revenue Analytics by Website, Client & Period</strong>
+                        <p>Revenue breakdown views by website, by client, and by date range — so management can instantly see which channels are most profitable and make data-backed strategic decisions.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Order Search in Seconds</strong>
+                        <p>Any historical order or transaction found using simple filters in under 30 seconds — eliminating the 20–30 minute manual search process entirely.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Single Source of Truth for All Teams</strong>
+                        <p>Management, accounts, and operations all work from the same live dashboard. No more version conflicts from spreadsheets passed around by email.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- IMPACT -->
+    <div class="impact-wrap">
+        <div class="sec-label">Real Business Impact</div>
+        <div class="sec-title">What Actually Changed After Going Live</div>
+        <p class="sec-sub" style="margin-bottom:0">Concrete improvements the business experienced once the dashboard was in daily use.</p>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <i class="fa-solid fa-bolt"></i>
+                <h4>40% Faster Payment Collection</h4>
+                <p>The team identifies overdue payments instantly and follows up the same day. Cash flow improved noticeably within the first month of deployment.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-clock"></i>
+                <h4>75% Less Time on Data Lookups</h4>
+                <p>Searches that took 20–30 minutes now take under 30 seconds. Staff spend time acting on information — not hunting for it.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h4>Risky Clients Identified Upfront</h4>
+                <p>Management checks client payment history before accepting new orders. Problem clients are flagged before commitments are made, reducing bad debt risk.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-chart-line"></i>
+                <h4>Revenue Strategy Became Data-Driven</h4>
+                <p>For the first time, management could see which websites and clients generated the most revenue — enabling them to prioritize the right channels strategically.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-file-invoice"></i>
+                <h4>60% Less Manual Reporting Work</h4>
+                <p>Reports that previously required hours of spreadsheet assembly are now self-serve in the dashboard — freeing the team for higher-value work.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-users"></i>
+                <h4>All Teams Work From One Source</h4>
+                <p>Management, accounts, and operations use the same live data. Misalignment from conflicting spreadsheet versions became a thing of the past.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="sec">
+        <div class="sec-label">Dashboard Modules</div>
+        <div class="sec-title">What's Inside the Dashboard</div>
+        <div class="sec-sub">Every view and feature built into the intelligence system.</div>
+    </div>
+    <div class="feat-grid">
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-list-check"></i></div><div><h4>Order Overview</h4><p>Complete list of all orders with status, client, website, amount, and date — filterable and searchable in seconds.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-money-check-dollar"></i></div><div><h4>Payment Status Tracker</h4><p>Live view of all payments broken down by Paid, Pending, and Overdue — with client names and amounts at a glance.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-user-clock"></i></div><div><h4>Client Payment History</h4><p>Search any client and see their full payment and order history — every transaction, amount, date, and status over any period.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-chart-bar"></i></div><div><h4>Revenue Analytics</h4><p>Revenue broken down by website, by client, and by date range — showing trends and identifying highest-value channels.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-globe"></i></div><div><h4>Website Performance View</h4><p>Side-by-side comparison of order volume and revenue across different websites to identify which are performing best.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-filter"></i></div><div><h4>Date Range & Client Filters</h4><p>Slice data by any time period or client in seconds — giving management instant custom views without any technical knowledge.</p></div></div>
+    </div>
+
+</div>
 </body>
 </html>
