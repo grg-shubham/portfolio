@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Call Analytics Pipeline | Shubham Garg</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{
+            --bg:#0B0F19;--card:#151D30;--card2:#0F172A;
+            --accent:#38BDF8;--accent-dim:rgba(56,189,248,.12);--accent-glow:rgba(56,189,248,.25);
+            --green:#22C55E;--green-dim:rgba(34,197,94,.12);
+            --red:#EF4444;--red-dim:rgba(239,68,68,.1);
+            --amber:#F59E0B;--amber-dim:rgba(245,158,11,.1);
+            --purple:#818CF8;--purple-dim:rgba(129,140,248,.1);
+            --t1:#F3F4F6;--t2:#9CA3AF;--t3:#6B7280;
+            --border:#1E2D45;--border-light:#24324F;
+            --sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;--r:10px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--t1);font-family:var(--sans);line-height:1.65;padding-bottom:5rem}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:var(--bg)}
+        ::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;width:100%;background:rgba(11,15,25,.92);
+            backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:1000;
+            display:flex;justify-content:space-between;align-items:center;padding:1rem 5%}
+        .nav-logo{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--t1);
+            display:flex;align-items:center;gap:.5rem;text-decoration:none}
+        .nav-logo i{color:var(--accent)}
+        .nav-links{display:flex;list-style:none;gap:1.75rem}
+        .nav-links a{color:var(--t2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .25s}
+        .nav-links a:hover{color:var(--accent)}
+        .nav-back{display:inline-flex;align-items:center;gap:.5rem;color:var(--t2);text-decoration:none;
+            font-family:var(--mono);font-size:.8rem;background:var(--card);
+            border:1px solid var(--border);padding:.4rem .9rem;border-radius:6px;transition:all .25s}
+        .nav-back:hover{color:var(--accent);border-color:var(--accent)}
+
+        /* LAYOUT */
+        .container{max-width:1100px;margin:0 auto;padding:6rem 2rem 2rem}
+
+        /* HERO CARD */
+        .proj-hero{padding:2.5rem;background:var(--card);border:1px solid var(--border);
+            border-radius:var(--r);margin-bottom:2rem;position:relative;overflow:hidden}
+        .eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2.5px;margin-bottom:.6rem;display:block}
+        .proj-title{font-size:2.1rem;font-weight:800;margin-bottom:1rem;line-height:1.15}
+        .proj-summary{color:var(--t2);font-size:.98rem;max-width:780px;line-height:1.75}
+        .pill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem}
+        .pill{font-family:var(--mono);font-size:.73rem;background:#1E293B;color:var(--accent);
+            padding:.28rem .65rem;border-radius:5px;border:1px solid var(--border)}
+        .pill.green{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,.25)}
+        .pill.amber{color:var(--amber);background:var(--amber-dim);border-color:rgba(245,158,11,.25)}
+        .pill.purple{color:var(--purple);background:var(--purple-dim);border-color:rgba(129,140,248,.25)}
+
+        /* KPI ROW */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+        .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.5rem;position:relative;overflow:hidden;text-align:center}
+        .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+        .kpi.blue::before{background:var(--accent)}
+        .kpi.green::before{background:var(--green)}
+        .kpi.amber::before{background:var(--amber)}
+        .kpi.purple::before{background:var(--purple)}
+        .kpi-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;margin-bottom:.25rem}
+        .kpi.blue .kpi-val{color:var(--accent)}
+        .kpi.green .kpi-val{color:var(--green)}
+        .kpi.amber .kpi-val{color:var(--amber)}
+        .kpi.purple .kpi-val{color:var(--purple)}
+        .kpi-label{font-size:.8rem;color:var(--t2)}
+
+        /* DASHBOARD FRAME */
+        .frame-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:2rem;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .frame-bar{background:var(--card2);padding:.85rem 1.25rem;
+            display:flex;justify-content:space-between;align-items:center;
+            font-family:var(--mono);font-size:.76rem;color:var(--t2)}
+        .frame-bar.top{border-bottom:1px solid var(--border)}
+        .frame-bar.bottom{border-top:1px solid var(--border)}
+        .fdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.4rem}
+        .fdot.blue{background:var(--accent)}
+        .fdot.green{background:var(--green)}
+        .iframe-std{position:relative;width:100%;padding-bottom:56.25%;background:var(--card2)}
+        .iframe-std iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .iframe-tall{position:relative;width:100%;height:650px;background:var(--card2)}
+        .iframe-tall iframe{width:100%;height:100%;border:none}
+
+        /* SECTION */
+        .sec{margin-bottom:1.75rem}
+        .sec-label{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2px;margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+        .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+        .sec-title{font-size:1.35rem;font-weight:700;margin-bottom:.3rem}
+        .sec-sub{font-size:.9rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.6}
+
+        /* STORY GRID */
+        .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+        .story-card{border-radius:var(--r);padding:2rem;border:1px solid var(--border)}
+        .story-card.problem{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.2)}
+        .story-card.solution{background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.2)}
+        .story-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+        .sicon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+            justify-content:center;font-size:.95rem;flex-shrink:0}
+        .problem .sicon{background:var(--red-dim);color:var(--red)}
+        .solution .sicon{background:var(--green-dim);color:var(--green)}
+        .story-head h3{font-size:1rem;font-weight:700}
+        .problem .story-head h3{color:var(--red)}
+        .solution .story-head h3{color:var(--green)}
+        .story-intro{font-size:.88rem;color:var(--t2);margin-bottom:1.25rem;line-height:1.65}
+        .ps-list{list-style:none;display:flex;flex-direction:column;gap:.9rem}
+        .ps-item{display:flex;gap:.85rem;align-items:flex-start}
+        .psdot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+            justify-content:center;font-size:.65rem;margin-top:3px}
+        .problem .psdot{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+        .solution .psdot{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+        .ps-text strong{display:block;font-size:.88rem;color:var(--t1);margin-bottom:.18rem}
+        .ps-text p{font-size:.83rem;color:var(--t2);line-height:1.55}
+
+        /* IMPACT SECTION */
+        .impact-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem}
+        .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem}
+        .impact-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+        .impact-card i{font-size:1.15rem;margin-bottom:.7rem;display:block;color:var(--accent)}
+        .impact-card h4{font-size:.9rem;font-weight:600;margin-bottom:.35rem}
+        .impact-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
+
+        /* FEATURES GRID */
+        .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
+        .feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;
+            transition:border-color .25s}
+        .feat-card:hover{border-color:var(--accent)}
+        .feat-icon{width:38px;height:38px;background:var(--accent-dim);
+            border:1px solid rgba(56,189,248,.2);border-radius:8px;display:flex;
+            align-items:center;justify-content:center;color:var(--accent);font-size:.95rem;flex-shrink:0}
+        .feat-card h4{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+        .feat-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
+
+        /* CLIENT BANNER */
+        .client-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.75rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem}
+        .client-logo-box{border-radius:8px;padding:.4rem .85rem;
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;height:44px}
+        .client-logo-box img{height:32px;width:auto;display:block}
+        .client-info strong{font-size:.92rem}
+        .client-info p{color:var(--t2);font-size:.83rem;margin-top:.2rem}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .kpi-row{grid-template-columns:1fr 1fr}
+            .story-grid{grid-template-columns:1fr}
+            .impact-grid{grid-template-columns:1fr}
+            .feat-grid{grid-template-columns:1fr}
+            .proj-title{font-size:1.65rem}
+            nav{padding:.9rem 5%}
+            .nav-links{display:none}
+            .client-banner{flex-direction:column;align-items:flex-start}
+        }
+        .proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+            background:linear-gradient(90deg,var(--amber),var(--accent))}
+
+        /* WORKFLOW DIAGRAM */
+        .flow-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem;overflow-x:auto}
+        .flow-title{font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2px;margin-bottom:1.5rem;display:flex;align-items:center;gap:.6rem}
+        .flow-title::after{content:'';flex:1;height:1px;background:var(--border)}
+        .flow-track{display:flex;align-items:center;gap:0;min-width:max-content;padding:.5rem 0}
+        .flow-node{display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:110px}
+        .flow-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;
+            justify-content:center;font-size:1.2rem;border:1px solid;flex-shrink:0}
+        .flow-icon.trigger{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:var(--amber)}
+        .flow-icon.data{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.25);color:var(--accent)}
+        .flow-icon.ai{background:rgba(129,140,248,.1);border-color:rgba(129,140,248,.3);color:var(--purple)}
+        .flow-icon.output{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25);color:var(--green)}
+        .flow-icon.loop{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2);color:var(--red)}
+        .flow-label{font-family:var(--mono);font-size:.68rem;color:var(--t2);text-align:center;
+            line-height:1.3;max-width:100px}
+        .flow-arrow{color:var(--border-light);font-size:1.1rem;padding:0 .35rem;flex-shrink:0;
+            margin-top:-20px}
+
+        /* OUTPUT SCHEMA CARD */
+        .schema-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.5rem;margin-bottom:2rem;font-family:var(--mono);font-size:.82rem}
+        .schema-card pre{color:var(--t2);line-height:1.7;overflow-x:auto}
+        .schema-card .key{color:var(--accent)}
+        .schema-card .val{color:var(--green)}
+        .schema-card .comment{color:var(--t3)}
+
+        /* VERDICT GRID */
+        .verdict-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:1rem}
+        .verdict-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;
+            padding:.9rem 1rem;font-size:.82rem}
+        .verdict-card .tag{font-family:var(--mono);font-size:.7rem;margin-bottom:.3rem}
+        .verdict-card p{color:var(--t2);font-size:.78rem;line-height:1.45}
+        .verdict-card.success .tag{color:var(--green)}
+        .verdict-card.warn .tag{color:var(--amber)}
+        .verdict-card.fail .tag{color:var(--red)}
+        .verdict-card.info .tag{color:var(--accent)}
+
+        /* DOWNLOAD BTN */
+        .download-btn{display:inline-flex;align-items:center;gap:.7rem;padding:.8rem 1.6rem;
+            border-radius:8px;font-size:.9rem;font-weight:700;text-decoration:none;
+            background:linear-gradient(135deg,var(--amber),#F97316);color:#0B0F19;
+            transition:all .3s;box-shadow:0 4px 15px rgba(245,158,11,.2)}
+        .download-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(245,158,11,.35)}
+        .download-btn i{font-size:1rem}
+
+        /* N8N BADGE */
+        .n8n-badge{display:inline-flex;align-items:center;gap:.5rem;
+            background:rgba(234,100,54,.12);border:1px solid rgba(234,100,54,.3);
+            color:#EA6436;padding:.3rem .8rem;border-radius:5px;
+            font-family:var(--mono);font-size:.75rem;font-weight:600}
+
+        @media(max-width:768px){
+            .verdict-grid{grid-template-columns:1fr 1fr}
+            .flow-track{gap:0}
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-chart-network"></i> SHUBHAM GARG</a>
+    <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="index.html#projects" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Projects</a>
+</nav>
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="proj-hero">
+        <span class="eyebrow">Case Study &nbsp;// &nbsp;N8N Workflow &nbsp;·&nbsp; Whisper API &nbsp;·&nbsp; OpenAI GPT &nbsp;·&nbsp; Google Sheets</span>
+        <h1 class="proj-title">Automated MIS & Call Analytics Pipeline</h1>
+        <div class="pill-row">
+            <span class="n8n-badge"><i class="fa-solid fa-diagram-project"></i> N8N Workflow</span>
+            <span class="pill"><i class="fa-solid fa-microphone-lines" style="margin-right:.35rem"></i>Whisper API</span>
+            <span class="pill"><i class="fa-solid fa-brain" style="margin-right:.35rem"></i>OpenAI GPT</span>
+            <span class="pill"><i class="fa-solid fa-table" style="margin-right:.35rem"></i>Google Sheets</span>
+            <span class="pill green">5 hrs → 20 min processing</span>
+            <span class="pill green">↓ 80% Manual Reporting</span>
+            <span class="pill amber">Live Automation · 14 Nodes</span>
+        </div>
+        <p class="proj-summary">Client call recordings were sitting unused — hours of audio with zero structured insights. This N8N automation pipeline picks up call recordings from Google Sheets, transcribes them using OpenAI Whisper, runs them through a GPT-powered Call Auditor agent, and writes structured MIS results (summary, verdict, issue side) back to the sheet — completely hands-free, on a schedule.</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+        <div class="kpi amber"><div class="kpi-val">14</div><div class="kpi-label">N8N Nodes in Pipeline</div></div>
+        <div class="kpi blue"><div class="kpi-val">20 min</div><div class="kpi-label">To Process 5+ Hrs of Audio</div></div>
+        <div class="kpi green"><div class="kpi-val">80%</div><div class="kpi-label">Manual Reporting Eliminated</div></div>
+        <div class="kpi purple"><div class="kpi-val">9</div><div class="kpi-label">Call Verdict Categories</div></div>
+    </div>
+
+    <!-- WORKFLOW DIAGRAM -->
+    <div class="flow-wrap">
+        <div class="flow-title">Live Workflow Architecture — 14 Node Pipeline</div>
+        <div class="flow-track">
+
+            <div class="flow-node">
+                <div class="flow-icon trigger"><i class="fa-solid fa-clock"></i></div>
+                <div class="flow-label">Schedule Trigger</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon data"><i class="fa-brands fa-google"></i></div>
+                <div class="flow-label">Get Data from Google Sheets</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon loop"><i class="fa-solid fa-rotate"></i></div>
+                <div class="flow-label">Loop Each Row</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon data"><i class="fa-solid fa-filter"></i></div>
+                <div class="flow-label">Filter Valid Recordings</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon data"><i class="fa-solid fa-download"></i></div>
+                <div class="flow-label">Fetch Audio URL</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon ai"><i class="fa-solid fa-microphone-lines"></i></div>
+                <div class="flow-label">Whisper API Transcribe</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon ai"><i class="fa-solid fa-robot"></i></div>
+                <div class="flow-label">GPT Call Auditor Agent</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon ai"><i class="fa-solid fa-code"></i></div>
+                <div class="flow-label">Structured Output Parser</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon data"><i class="fa-solid fa-hourglass-half"></i></div>
+                <div class="flow-label">Wait 5s (Rate Limit)</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon output"><i class="fa-brands fa-google"></i></div>
+                <div class="flow-label">Write Results to Sheet</div>
+            </div>
+            <div class="flow-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <div class="flow-node">
+                <div class="flow-icon output"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="flow-label">Workflow Complete</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- STORY -->
+    <div class="sec">
+        <div class="sec-label">The Full Story</div>
+        <div class="sec-title">Problem → Solution → Real Business Impact</div>
+        <div class="sec-sub">What was broken, exactly what the automation does, and what changed after deployment.</div>
+    </div>
+
+    <div class="story-grid">
+        <div class="story-card problem">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>What Was Wasting Hours Every Day</h3>
+            </div>
+            <p class="story-intro">The business runs inbound service calls (HVAC, Pest Control, Plumbing) across the USA. Every call was recorded — but extracting insights from those recordings required someone to manually listen, judge, and summarize each one. With 50–100+ calls daily, that was completely unscalable.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>5+ Hours of Audio Sat Unanalyzed Daily</strong>
+                        <p>No one had time to listen to every call recording. Quality issues, missed bookings, and agent problems were only discovered days later — if at all.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>No Structured MIS from Call Data</strong>
+                        <p>Management had no way to see call outcomes at a glance — which calls were converted, which agents failed to assist, which customers were in wrong areas. All of this required manual logging.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Agent Performance Was Invisible</strong>
+                        <p>Without per-call verdicts and issue attribution (Buyer Side vs Seller Side), there was no objective way to evaluate call quality or identify which agents needed coaching.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>MIS Reports Were Always Delayed</strong>
+                        <p>Any reporting on call performance required manually writing up summaries — a process that took hours and was always a day or more behind real-time operations.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="story-card solution">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3>What the Automation Does — Step by Step</h3>
+            </div>
+            <p class="story-intro">I built a 14-node N8N workflow that runs on a schedule, picks up call recording URLs from Google Sheets, processes them through AI, and writes structured MIS results back — zero human involvement required.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Step 1 — Auto-fetch Recording URLs from Google Sheets</strong>
+                        <p>The workflow triggers on a schedule, reads all pending call rows from Google Sheets, filters only valid recordings, and loops through them one by one in batches.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Step 2 — Transcribe Audio via OpenAI Whisper</strong>
+                        <p>Each recording URL is fetched as audio and sent to the Whisper API for transcription — converting spoken calls into clean, accurate text in seconds.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Step 3 — GPT Call Auditor Agent Analyzes the Transcript</strong>
+                        <p>A custom GPT agent (acting as a professional call quality analyst) reads the transcript and produces: a 10-word summary, a verdict from 9 predefined categories, and an issue attribution (Buyer Side / Seller Side / No Clear Issue).</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Step 4 — Structured Output Written Back to Google Sheets</strong>
+                        <p>The parsed JSON output is written directly back to the corresponding row in Google Sheets — giving management an instantly readable MIS report without touching a single file.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- AI OUTPUT SCHEMA -->
+    <div class="sec">
+        <div class="sec-label">AI Output Structure</div>
+        <div class="sec-title">What the GPT Agent Produces for Every Call</div>
+        <div class="sec-sub">Each call is analyzed and written back to Google Sheets in this exact structured format.</div>
+    </div>
+
+    <div class="schema-card">
+        <pre>{
+  <span class="key">"summary"</span>  : <span class="val">"Customer called about HVAC repair, booking confirmed for tomorrow"</span>  <span class="comment">// Exactly 10 words</span>
+  <span class="key">"verdict"</span>  : <span class="val">"Accepted &amp; Converted"</span>                                             <span class="comment">// One of 9 categories</span>
+  <span class="key">"issue_side"</span>: <span class="val">"No Clear Issue"</span>                                             <span class="comment">// Buyer Side / Seller Side / No Clear Issue</span>
+}</pre>
+    </div>
+
+    <!-- VERDICT CATEGORIES -->
+    <div class="sec">
+        <div class="sec-label">Verdict Categories</div>
+        <div class="sec-title">9 Call Outcome Classifications</div>
+        <div class="sec-sub">The GPT agent assigns every call to one of these verdict categories based on the transcript.</div>
+    </div>
+
+    <div class="verdict-grid">
+        <div class="verdict-card success">
+            <div class="tag">✓ Accepted &amp; Converted</div>
+            <p>Call successful — service booked or confirmed by customer.</p>
+        </div>
+        <div class="verdict-card info">
+            <div class="tag">ℹ Customer Inquiry Only</div>
+            <p>Informational call — customer asked questions without booking.</p>
+        </div>
+        <div class="verdict-card warn">
+            <div class="tag">⚠ Looking for Another Provider</div>
+            <p>Customer not interested — comparing with competitors.</p>
+        </div>
+        <div class="verdict-card warn">
+            <div class="tag">⚠ Can't Serve in Area</div>
+            <p>Service not available in the customer's location.</p>
+        </div>
+        <div class="verdict-card fail">
+            <div class="tag">✕ Seller Failed to Assist</div>
+            <p>Agent unable to resolve the issue or mishandled the call.</p>
+        </div>
+        <div class="verdict-card fail">
+            <div class="tag">✕ Caller Hang Up</div>
+            <p>Customer disconnected early before resolution.</p>
+        </div>
+        <div class="verdict-card fail">
+            <div class="tag">✕ Target Transfer Not Available</div>
+            <p>Transfer failed — no receiving agent was available.</p>
+        </div>
+        <div class="verdict-card info">
+            <div class="tag">ℹ Wrong Number Dialed</div>
+            <p>Customer reached the wrong number accidentally.</p>
+        </div>
+        <div class="verdict-card info">
+            <div class="tag">ℹ No Interaction Both Sides</div>
+            <p>Call connected but no conversation took place.</p>
+        </div>
+    </div>
+
+    <!-- IMPACT -->
+    <div class="impact-wrap" style="margin-top:2rem">
+        <div class="sec-label">Real Business Impact</div>
+        <div class="sec-title">What Actually Changed After Deployment</div>
+        <p class="sec-sub" style="margin-bottom:0">Concrete improvements from automating what used to be hours of manual call review work.</p>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <i class="fa-solid fa-bolt"></i>
+                <h4>5+ Hours Processed in 20 Minutes</h4>
+                <p>A full day's worth of call recordings — previously unanalyzed — are now transcribed, audited, and written to the MIS sheet in under 20 minutes automatically.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-file-lines"></i>
+                <h4>Instant MIS Without Manual Work</h4>
+                <p>Management opens Google Sheets in the morning and sees every call from the previous day already summarized with verdict and issue attribution — zero manual effort.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-chart-bar"></i>
+                <h4>Agent Performance Now Measurable</h4>
+                <p>With per-call verdicts and issue side attribution, management can now objectively track which agents are underperforming and identify coaching opportunities.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h4>Quality Control Became Proactive</h4>
+                <p>Issues like "Seller Failed to Assist" or "Caller Hang Up" are now flagged automatically — so quality problems are caught and addressed the same day, not weeks later.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-gear"></i>
+                <h4>Fully Automated — Zero Intervention</h4>
+                <p>The pipeline runs on a schedule with error handling built in. If a recording fails, the error is logged to a separate sheet row — the rest of the batch continues uninterrupted.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+                <h4>80% Reduction in Reporting Overhead</h4>
+                <p>What previously required hours of listening, typing, and spreadsheet work is now fully automated — freeing the team for higher-value tasks.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD N8N -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:2rem;margin-top:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem">
+        <div>
+            <p style="font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:.5rem">N8N Workflow File</p>
+            <h3 style="font-size:1.05rem;margin-bottom:.4rem">Download the Actual Workflow JSON</h3>
+            <p style="color:var(--t2);font-size:.88rem;max-width:520px">The complete N8N workflow file used in production. Import it directly into your N8N instance to see the full 14-node pipeline — all nodes, connections, prompts, and logic included.</p>
+        </div>
+        <a href="Audio_transcribe_with_open_AI_whisper.json" download class="download-btn">
+            <i class="fa-solid fa-arrow-down-to-line"></i> Download N8N Workflow (.json)
+        </a>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="sec" style="margin-top:2rem">
+        <div class="sec-label">Technical Details</div>
+        <div class="sec-title">What's Inside the Pipeline</div>
+        <div class="sec-sub">A breakdown of every node and its role in the automation.</div>
+    </div>
+    <div class="feat-grid">
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.2);color:var(--amber)"><i class="fa-solid fa-clock"></i></div><div><h4>Schedule Trigger</h4><p>Runs the entire pipeline automatically on a defined schedule — no manual execution needed.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-brands fa-google"></i></div><div><h4>Google Sheets Integration</h4><p>Reads pending call rows, writes structured results back, and logs errors to a separate row — fully automated data management.</p></div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2);color:var(--red)"><i class="fa-solid fa-rotate"></i></div><div><h4>Batch Loop with Error Handling</h4><p>Processes recordings one by one in a loop. If a row fails (bad URL, API error), it logs the error and continues to the next — the pipeline never breaks.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-filter"></i></div><div><h4>Recording Filter Node</h4><p>Skips rows with missing or already-processed recordings — only valid, unanalyzed calls are sent through the AI pipeline.</p></div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(129,140,248,.1);border-color:rgba(129,140,248,.2);color:var(--purple)"><i class="fa-solid fa-microphone-lines"></i></div><div><h4>Whisper API Transcription</h4><p>Each audio URL is fetched and sent to OpenAI Whisper for accurate speech-to-text conversion — handles any call length.</p></div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(129,140,248,.1);border-color:rgba(129,140,248,.2);color:var(--purple)"><i class="fa-solid fa-robot"></i></div><div><h4>GPT Call Auditor Agent</h4><p>A custom-prompted LangChain agent acting as a professional call quality analyst — produces summary, verdict, and issue side for every transcript.</p></div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(129,140,248,.1);border-color:rgba(129,140,248,.2);color:var(--purple)"><i class="fa-solid fa-code"></i></div><div><h4>Structured Output Parser</h4><p>Forces GPT output into a strict JSON schema — ensuring summary, verdict, and issue_side are always cleanly parseable for Sheets write-back.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-hourglass-half"></i></div><div><h4>5-Second Rate Limit Wait</h4><p>A built-in wait node between each call prevents OpenAI API rate limit errors — keeping the pipeline stable across large batches.</p></div></div>
+    </div>
+
+</div>
+</body>
+</html>

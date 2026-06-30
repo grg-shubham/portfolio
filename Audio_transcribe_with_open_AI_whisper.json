@@ -1,0 +1,1102 @@
+{
+  "name": "Audio transcribe with open AI whisper",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        560
+      ],
+      "id": "685b3213-4ee1-4fac-9aa6-54aa5dd39eb9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0956fff6-55eb-4081-8ce9-26373afe840a",
+              "leftValue": "={{ $json.Recording }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b53e57a6-9909-4c81-9b66-15e6c50cb881",
+              "leftValue": "={{ $json['AI | Call Transcribe'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        464
+      ],
+      "id": "b9c2d272-b177-41f5-a2c9-67c4e35fcb2f",
+      "name": "Filter",
+      "executeOnce": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.Recording }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        848,
+        224
+      ],
+      "id": "26e3ffc5-0d8a-40d4-8183-b31bf34e40c0",
+      "name": "URL to Audio",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1360,
+        416
+      ],
+      "id": "223b4369-fabf-419c-91bd-bfd2b334f2c3",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "vBVyMp8WMlDHdxXM",
+          "name": "tejas@digierts.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"summary\": \"<exactly 10 words>\",\n  \"verdict\": \"<one verdict from rules>\",\n  \"issue_side\": \"<Buyer Side / Seller Side / No Clear Issue>\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1488,
+        416
+      ],
+      "id": "f094f3aa-cb54-4ffa-be2c-a31ebf11048e",
+      "name": "Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the call transcript:\n\n{{$json[\"text\"]}}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a professional call quality analyst.\n\nYou will receive a transcript of a call between:\n- Company executive (Seller)\n- Customer (Buyer)\n\nThe company provides services in USA:\nHVAC, Pest Control, Plumbing.\n\n# Your tasks:\n\n### 1) Write a summary in EXACTLY 10 words.\n   - Count carefully.\n   - Do not exceed 10 words.\n   - No punctuation at the end.\n\n### 2) Give a verdict based on the rules below.\n\n### 3) Identify Issue Side:\n   - Buyer Side\n   - Seller Side\n   - No Clear Issue\n\n----------------------\n# VERDICT RULES:\n\nUse one of these verdict styles based on conversation context:\n\n- \"Accepted & Converted\" → Call successful, service booked or confirmed.\n- \"Wrong Number Dialed\" → Customer dialed incorrect number.\n- \"Caller Hang Up\" → Customer disconnected early.\n- \"Target Transfer Not Available\" → Transfer failed or no receiving agent.\n- \"Can't Serve in Area\" → Service not available in customer location.\n- \"Looking for Another Service Provider\" → Customer not interested, comparing competitors.\n- \"No Interaction Both Sides\" → Call connected but no conversation.\n- \"Customer Inquiry Only\" → Informational call without booking.\n- \"Seller Failed to Assist\" → Agent unable to resolve or mishandled call.\n\nIf call is successful, ALWAYS use:\n\"Accepted & Converted\"\n\n----------------------\n\n# Strict Output Format:\n\nSummary: <exactly 10 words>\nVerdict: <one verdict from rules>\nIssue Side: <Buyer Side / Seller Side / No Clear Issue>\n\nDo not add extra text."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1344,
+        192
+      ],
+      "id": "b9d6c608-830a-441c-99ac-3c16a04da13e",
+      "name": "Call Auditor",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        208
+      ],
+      "id": "9a2e0d9a-7136-4208-9f6c-907f91229ac3",
+      "name": "Audio to Transcribe",
+      "credentials": {
+        "openAiApi": {
+          "id": "vBVyMp8WMlDHdxXM",
+          "name": "tejas@digierts.com"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4",
+          "mode": "list",
+          "cachedResultName": "Call Details - Digierts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "All Call Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Campaign",
+              "lookupValue": "HVAC Inbound"
+            },
+            {
+              "lookupColumn": "Campaign",
+              "lookupValue": "Plumbing Inbound"
+            },
+            {
+              "lookupColumn": "Campaign",
+              "lookupValue": "Pest Control Inbound"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        464
+      ],
+      "id": "1d09fe67-e6c7-487c-b548-018a65828df5",
+      "name": "Get Data",
+      "credentials": {
+        "googleApi": {
+          "id": "gLgJ7G0Yvh27paYT",
+          "name": "Data-analyst Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4",
+          "mode": "list",
+          "cachedResultName": "Call Details - Digierts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "All Call Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "AI | Summary": "={{ $json.output.summary }}",
+            "AI | Verdict": "={{ $json.output.verdict }}",
+            "AI | Issue Side": "={{ $json.output.issue_side }}",
+            "AI | Call Transcribe": "={{ $('Audio to Transcribe').item.json.text }}",
+            "row_number": "={{ $('Loop Row').item.json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Call Date",
+              "displayName": "Call Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Zipcode",
+              "displayName": "Zipcode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Winning Bid",
+              "displayName": "Winning Bid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Avg. Ring Tree Bid Amount",
+              "displayName": "Avg. Ring Tree Bid Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Winning Bid Dynamic Duration",
+              "displayName": "Winning Bid Dynamic Duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number Pool Used",
+              "displayName": "Number Pool Used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Campaign",
+              "displayName": "Campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publisher",
+              "displayName": "Publisher",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Caller ID",
+              "displayName": "Caller ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number",
+              "displayName": "Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time To Call",
+              "displayName": "Time To Call",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Is Duplicate",
+              "displayName": "Is Duplicate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "End Call Source",
+              "displayName": "End Call Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time To Connect",
+              "displayName": "Time To Connect",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Target",
+              "displayName": "Target",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Revenue",
+              "displayName": "Revenue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Payout",
+              "displayName": "Payout",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Duration",
+              "displayName": "Duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recording",
+              "displayName": "Recording",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ring Failures",
+              "displayName": "Ring Failures",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Cost",
+              "displayName": "Total Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI | Call Transcribe",
+              "displayName": "AI | Call Transcribe",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI | Summary",
+              "displayName": "AI | Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI | Verdict",
+              "displayName": "AI | Verdict",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI | Issue Side",
+              "displayName": "AI | Issue Side",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Human Verdict",
+              "displayName": "Human Verdict",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Issue Side",
+              "displayName": "Issue Side",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1760,
+        176
+      ],
+      "id": "0557e97d-3333-4d89-b8c2-d6337cf91dd5",
+      "name": "Update Data",
+      "credentials": {
+        "googleApi": {
+          "id": "gLgJ7G0Yvh27paYT",
+          "name": "Data-analyst Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 14
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        368
+      ],
+      "id": "a9215faa-8cd4-4071-b07c-ed9190f0bc2f",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        672,
+        464
+      ],
+      "id": "adea057c-3001-49bf-9ecb-d995840f1f20",
+      "name": "Loop Row"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4",
+          "mode": "list",
+          "cachedResultName": "Call Details - Digierts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "All Call Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NYpdRuezDe19Lp4Wl8jY1hulwvaXEotArIC61z2gZJ4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "AI | Summary": "",
+            "AI | Verdict": "",
+            "AI | Issue Side": "",
+            "AI | Call Transcribe": "Bad request",
+            "row_number": "={{ $('Loop Row').item.json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Call Date",
+              "displayName": "Call Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Zipcode",
+              "displayName": "Zipcode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Winning Bid",
+              "displayName": "Winning Bid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Avg. Ring Tree Bid Amount",
+              "displayName": "Avg. Ring Tree Bid Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Winning Bid Dynamic Duration",
+              "displayName": "Winning Bid Dynamic Duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number Pool Used",
+              "displayName": "Number Pool Used",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Campaign",
+              "displayName": "Campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publisher",
+              "displayName": "Publisher",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Caller ID",
+              "displayName": "Caller ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number",
+              "displayName": "Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time To Call",
+              "displayName": "Time To Call",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Is Duplicate",
+              "displayName": "Is Duplicate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "End Call Source",
+              "displayName": "End Call Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time To Connect",
+              "displayName": "Time To Connect",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Target",
+              "displayName": "Target",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Revenue",
+              "displayName": "Revenue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Payout",
+              "displayName": "Payout",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Duration",
+              "displayName": "Duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Recording",
+              "displayName": "Recording",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ring Failures",
+              "displayName": "Ring Failures",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Cost",
+              "displayName": "Total Cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI | Call Transcribe",
+              "displayName": "AI | Call Transcribe",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI | Summary",
+              "displayName": "AI | Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI | Verdict",
+              "displayName": "AI | Verdict",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI | Issue Side",
+              "displayName": "AI | Issue Side",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Human Verdict",
+              "displayName": "Human Verdict",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Issue Side",
+              "displayName": "Issue Side",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1776,
+        544
+      ],
+      "id": "6b7f288b-97ab-436b-8ab8-f8f0d6173736",
+      "name": "Update Error",
+      "credentials": {
+        "googleApi": {
+          "id": "gLgJ7G0Yvh27paYT",
+          "name": "Data-analyst Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2080,
+        544
+      ],
+      "id": "db45edce-f141-4ba3-af4b-3dce7e6a1cc2",
+      "name": "Wait 5s",
+      "webhookId": "1b95e4b8-ce3c-4026-94a2-6e4bda4d6222"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2352,
+        448
+      ],
+      "id": "e8c8d92f-b664-4c61-9aed-9a19e054c557",
+      "name": "Workflow Complete"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {},
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2026-03-12T14:00:30.015+05:30",
+          "Readable date": "March 12th 2026, 2:00:30 pm",
+          "Readable time": "2:00:30 pm",
+          "Day of week": "Thursday",
+          "Year": "2026",
+          "Month": "March",
+          "Day of month": "12",
+          "Hour": "14",
+          "Minute": "00",
+          "Second": "30",
+          "Timezone": "Asia/Kolkata (UTC+05:30)"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Loop Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL to Audio": {
+      "main": [
+        [
+          {
+            "node": "Audio to Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Call Auditor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Call Auditor",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Auditor": {
+      "main": [
+        [
+          {
+            "node": "Update Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio to Transcribe": {
+      "main": [
+        [
+          {
+            "node": "Call Auditor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Data": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Data": {
+      "main": [
+        [
+          {
+            "node": "Wait 5s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Row": {
+      "main": [
+        [
+          {
+            "node": "Workflow Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "URL to Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Error": {
+      "main": [
+        [
+          {
+            "node": "Wait 5s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5s": {
+      "main": [
+        [
+          {
+            "node": "Loop Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "656bbf92-d5da-4c3b-9cab-21ce189564ab",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1f1785d995b3fa32ab6b8219168659331dbe1459fee9ca0c94987e0285ae2676"
+  },
+  "id": "BnPOPytWo4hYVAws_8qE4",
+  "tags": []
+}

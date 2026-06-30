@@ -319,6 +319,39 @@
 
         <!-- LIVE SYSTEMS -->
         <div id="tab-live" class="proj-grid">
+
+            <div class="proj-card" style="border-color:rgba(234,100,54,.35);position:relative">
+                <div style="position:absolute;top:-1px;right:1.25rem;background:linear-gradient(135deg,#EA6436,#F97316);color:#0B0F19;font-family:var(--mono);font-size:.68rem;font-weight:700;padding:.25rem .7rem;border-radius:0 0 6px 6px;letter-spacing:.5px">FEATURED</div>
+                <div class="proj-head">
+                    <div class="proj-icon" style="background:rgba(234,100,54,.12);border-color:rgba(234,100,54,.3);color:#EA6436"><i class="fa-solid fa-diagram-project"></i></div>
+                    <a href="call-analytics.html" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <div class="proj-title">Automated MIS & Call Analytics Pipeline</div>
+                <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.25rem">
+                    <span style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(234,100,54,.12);border:1px solid rgba(234,100,54,.3);color:#EA6436;font-family:var(--mono);font-size:.7rem;padding:.2rem .55rem;border-radius:4px;font-weight:600"><i class="fa-solid fa-diagram-project"></i> N8N · 14 Nodes</span>
+                </div>
+                <div class="proj-desc">Picks up call recording URLs from Google Sheets, transcribes them with OpenAI Whisper, runs them through a custom GPT Call Auditor agent, and writes structured MIS results (summary, verdict, issue side) back to the sheet — fully automated on a schedule. Turns 5+ hours of audio into structured reports in 20 minutes.</div>
+                <div class="impact-box">
+                    <p>Measurable Impact</p>
+                    <div class="impact-badges">
+                        <span class="ibadge">5 hrs audio → 20 min</span>
+                        <span class="ibadge">↓ 80% manual reporting</span>
+                        <span class="ibadge">9 verdict categories</span>
+                        <span class="ibadge">Zero human steps</span>
+                    </div>
+                </div>
+                <div class="pill-row">
+                    <span class="pill">N8N</span>
+                    <span class="pill">Whisper API</span>
+                    <span class="pill">OpenAI GPT</span>
+                    <span class="pill">Google Sheets</span>
+                    <span class="pill">LangChain Agent</span>
+                </div>
+                <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+                    <a href="call-analytics.html" class="btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Full Case Study</a>
+                    <a href="Audio_transcribe_with_open_AI_whisper.json" download class="btn-sm" style="background:rgba(234,100,54,.12);border-color:rgba(234,100,54,.3);color:#EA6436"><i class="fa-solid fa-arrow-down-to-line"></i> Download N8N Workflow</a>
+                </div>
+            </div>
             <div class="proj-card">
                 <div class="proj-head">
                     <div class="proj-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
@@ -388,23 +421,6 @@
 
         <!-- DATA PIPELINES -->
         <div id="tab-pipeline" class="proj-grid" style="display:none">
-            <div class="proj-card">
-                <div class="proj-head"><div class="proj-icon"><i class="fa-solid fa-microphone-lines"></i></div></div>
-                <div class="proj-title">Automated MIS & Call Analytics Pipeline</div>
-                <div class="proj-desc">End-to-end automation using Whisper API + GPT to transcribe raw client call recordings and generate structured MIS summaries, ratings, and action items — hands-free. Processes 5+ hours of audio in 20 minutes.</div>
-                <div class="impact-box">
-                    <p>Measurable Impact</p>
-                    <div class="impact-badges">
-                        <span class="ibadge">5 hrs → 20 min processing</span>
-                        <span class="ibadge">↓ 80% manual reporting</span>
-                        <span class="ibadge">Auto MIS generation</span>
-                    </div>
-                </div>
-                <div class="pill-row">
-                    <span class="pill">Whisper API</span><span class="pill">OpenAI GPT</span><span class="pill">Python</span><span class="pill">MIS Analytics</span>
-                </div>
-            </div>
-
             <div class="proj-card">
                 <div class="proj-head"><div class="proj-icon"><i class="fa-solid fa-rss"></i></div></div>
                 <div class="proj-title">AI Content Publishing Engine</div>
