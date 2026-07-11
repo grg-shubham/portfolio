@@ -329,6 +329,32 @@
 
         <!-- LIVE SYSTEMS -->
         <div class="proj-grid">
+            <div class="proj-card" style="border-color:rgba(56,189,248,.35);position:relative">
+                <div style="position:absolute;top:-1px;right:1.25rem;background:linear-gradient(135deg,var(--accent),#6366F1);color:#0B0F19;font-family:var(--mono);font-size:.68rem;font-weight:700;padding:.25rem .7rem;border-radius:0 0 6px 6px;letter-spacing:.5px">SQL PROJECT</div>
+                <div class="proj-head">
+                    <div class="proj-icon" style="background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.2);color:var(--accent)"><i class="fa-solid fa-database"></i></div>
+                    <a href="pan-validation.html" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <div class="proj-title">PAN Number Validation — SQL Data Cleaning</div>
+                <div class="proj-desc">A complete SQL data cleaning and validation project on 10,000 PAN number records. Handles nulls, duplicates, case correction, and validates format using custom SQL functions — categorising every record as Valid or Invalid with a full summary report.</div>
+                <div class="impact-box">
+                    <p>Measurable Impact</p>
+                    <div class="impact-badges">
+                        <span class="ibadge">10,000 Records Processed</span>
+                        <span class="ibadge">3,186 Valid PANs Found</span>
+                        <span class="ibadge">Custom SQL Functions</span>
+                        <span class="ibadge">Full Audit Report</span>
+                    </div>
+                </div>
+                <div class="pill-row">
+                    <span class="pill">SQL</span>
+                    <span class="pill">Data Cleaning</span>
+                    <span class="pill">Regex Validation</span>
+                    <span class="pill">Custom Functions</span>
+                    <span class="pill">CTEs & Views</span>
+                </div>
+                <a href="pan-validation.html" class="btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Full Case Study</a>
+            </div>
 
             <div class="proj-card" style="border-color:rgba(234,100,54,.35);position:relative">
                 <div style="position:absolute;top:-1px;right:1.25rem;background:linear-gradient(135deg,#EA6436,#F97316);color:#0B0F19;font-family:var(--mono);font-size:.68rem;font-weight:700;padding:.25rem .7rem;border-radius:0 0 6px 6px;letter-spacing:.5px">FEATURED</div>
@@ -404,7 +430,6 @@
                 </div>
                 <div class="proj-title">Inventory Management System (IMS)</div>
                 <div class="proj-desc">Full-stack web app on Google Apps Script with real-time stock tracking, timestamped transaction logs, vendor management, and visual low-stock alerts — backed by a Google Sheets database.</div>
-                <img src="assets/imsDashboard.png" alt="IMS Dashboard" class="proj-img">
                 <div class="impact-box">
                     <p>Measurable Impact</p>
                     <div class="impact-badges">
@@ -426,7 +451,6 @@
                 </div>
                 <div class="proj-title">Student & Fee Management System</div>
                 <div class="proj-desc">Centralized Looker Studio dashboard for a coaching institute — tracks admissions, installment payments, pending dues, and revenue, replacing manual registers and scattered Excel files.</div>
-                <img src="assets/stuDashboard.png" alt="Student Dashboard" class="proj-img">
                 <div class="impact-box">
                     <p>Measurable Impact</p>
                     <div class="impact-badges">
@@ -448,7 +472,6 @@
                 </div>
                 <div class="proj-title">Client Order & Payment Intelligence Dashboard</div>
                 <div class="proj-desc">Business intelligence dashboard for monitoring orders, payment status, client history, and revenue by channel — giving management instant visibility without manual report generation.</div>
-                <img src="assets/orderDashboard.png" alt="Order Dashboard" class="proj-img">
                 <div class="impact-box">
                     <p>Measurable Impact</p>
                     <div class="impact-badges">
@@ -464,49 +487,73 @@
             </div>
         </div>
 
-        <!-- DATA PIPELINES -->
-        <!-- SQL & Upcoming -->
+        <!-- UPCOMING PROJECTS SUBSECTION -->
+        <div style="margin-top:3.5rem">
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem">
+                <div style="font-family:var(--mono);font-size:.72rem;color:var(--amber);text-transform:uppercase;letter-spacing:2px;white-space:nowrap">🔭 Coming Next</div>
+                <div style="flex:1;height:1px;background:var(--border)"></div>
+                <div style="font-family:var(--mono);font-size:.72rem;color:var(--text-3)">Projects in progress</div>
+            </div>
 
-            <div class="proj-card">
-                <div class="proj-head">
-                    <div class="proj-icon" style="background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.2);color:var(--accent)"><i class="fa-solid fa-database"></i></div>
-                    <a href="pan-validation.html" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                </div>
-                <div class="proj-title">PAN Number Validation — SQL Data Cleaning</div>
-                <div class="proj-desc">A complete SQL data cleaning and validation project on 10,000 PAN number records. Handles nulls, duplicates, case correction, and validates format using custom SQL functions — categorising every record as Valid or Invalid with a full summary report.</div>
-                <div class="impact-box">
-                    <p>Measurable Impact</p>
-                    <div class="impact-badges">
-                        <span class="ibadge">10,000 Records Processed</span>
-                        <span class="ibadge">3,186 Valid PANs Found</span>
-                        <span class="ibadge">Custom SQL Functions</span>
-                        <span class="ibadge">Full Audit Report</span>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem">
+
+                <!-- Advanced RAG -->
+                <div style="background:rgba(129,140,248,.04);border:1px dashed rgba(129,140,248,.3);border-radius:var(--radius);padding:1.5rem">
+                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+                        <div style="width:38px;height:38px;background:rgba(129,140,248,.12);border:1px solid rgba(129,140,248,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#818CF8;font-size:1rem;flex-shrink:0"><i class="fa-solid fa-robot"></i></div>
+                        <div>
+                            <div style="font-size:.65rem;font-family:var(--mono);color:var(--amber);letter-spacing:.5px;margin-bottom:.15rem">IN PROGRESS</div>
+                            <div style="font-size:.95rem;font-weight:700">Advanced RAG Pipeline</div>
+                        </div>
+                    </div>
+                    <div style="font-size:.83rem;color:var(--text-2);line-height:1.6;margin-bottom:.85rem">Retrieval-Augmented Generation system for intelligent document querying — combining vector search, embeddings, and LLMs for accurate, context-aware answers.</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(129,140,248,.1);color:#818CF8;border:1px solid rgba(129,140,248,.25);padding:.2rem .55rem;border-radius:4px">RAG</span>
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(129,140,248,.1);color:#818CF8;border:1px solid rgba(129,140,248,.25);padding:.2rem .55rem;border-radius:4px">Vector Search</span>
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(129,140,248,.1);color:#818CF8;border:1px solid rgba(129,140,248,.25);padding:.2rem .55rem;border-radius:4px">LLM</span>
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(129,140,248,.1);color:#818CF8;border:1px solid rgba(129,140,248,.25);padding:.2rem .55rem;border-radius:4px">Embeddings</span>
                     </div>
                 </div>
-                <div class="pill-row">
-                    <span class="pill">SQL</span>
-                    <span class="pill">Data Cleaning</span>
-                    <span class="pill">Regex Validation</span>
-                    <span class="pill">Custom Functions</span>
-                    <span class="pill">CTEs & Views</span>
-                </div>
-                <a href="pan-validation.html" class="btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Full Case Study</a>
-            </div>
 
-            <div class="proj-card">
-                <div class="proj-head"><div class="proj-icon"><i class="fa-solid fa-server"></i></div></div>
-                <div class="proj-title">SQL Case Studies & Query Optimization</div>
-                <div class="proj-desc">Enterprise schema design, complex multi-table window functions, subquery architectures, and CTE-based reporting patterns with performance benchmarks.</div>
-                <div class="pill-row"><span class="pill amber">Coming Soon</span><span class="pill">SQL</span><span class="pill">Window Functions</span><span class="pill">CTEs</span></div>
-            </div>
-            <div class="proj-card">
-                <div class="proj-head"><div class="proj-icon"><i class="fa-solid fa-brain"></i></div></div>
-                <div class="proj-title">Python ML & Predictive Analytics</div>
-                <div class="proj-desc">Customer segmentation, demand forecasting, and pattern-detection models built natively in Python — focused on practical business applications.</div>
-                <div class="pill-row"><span class="pill amber">Coming Soon</span><span class="pill">Python</span><span class="pill">Scikit-learn</span><span class="pill">Pandas</span></div>
+                <!-- Advanced SQL -->
+                <div style="background:rgba(56,189,248,.04);border:1px dashed rgba(56,189,248,.3);border-radius:var(--radius);padding:1.5rem">
+                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+                        <div style="width:38px;height:38px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:1rem;flex-shrink:0"><i class="fa-solid fa-database"></i></div>
+                        <div>
+                            <div style="font-size:.65rem;font-family:var(--mono);color:var(--amber);letter-spacing:.5px;margin-bottom:.15rem">IN PROGRESS</div>
+                            <div style="font-size:.95rem;font-weight:700">Advanced SQL Case Studies</div>
+                        </div>
+                    </div>
+                    <div style="font-size:.83rem;color:var(--text-2);line-height:1.6;margin-bottom:.85rem">Window functions, CTEs, subquery optimization, and complex multi-table architectures — documented with real performance benchmarks and business use cases.</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(56,189,248,.1);color:var(--accent);border:1px solid rgba(56,189,248,.2);padding:.2rem .55rem;border-radius:4px">SQL</span>
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(56,189,248,.1);color:var(--accent);border:1px solid rgba(56,189,248,.2);padding:.2rem .55rem;border-radius:4px">Window Functions</span>
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(56,189,248,.1);color:var(--accent);border:1px solid rgba(56,189,248,.2);padding:.2rem .55rem;border-radius:4px">CTEs</span>
+                    </div>
+                </div>
+
+                <!-- Power BI -->
+                <div style="background:rgba(245,158,11,.04);border:1px dashed rgba(245,158,11,.3);border-radius:var(--radius);padding:1.5rem">
+                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+                        <div style="width:38px;height:38px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--amber);font-size:1rem;flex-shrink:0"><i class="fa-solid fa-chart-bar"></i></div>
+                        <div>
+                            <div style="font-size:.65rem;font-family:var(--mono);color:var(--amber);letter-spacing:.5px;margin-bottom:.15rem">IN PROGRESS</div>
+                            <div style="font-size:.95rem;font-weight:700">Power BI Dashboard</div>
+                        </div>
+                    </div>
+                    <div style="font-size:.83rem;color:var(--text-2);line-height:1.6;margin-bottom:.85rem">Interactive Power BI dashboard with advanced DAX measures, drill-through reports, and executive-level KPI tracking for business performance analysis.</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:.35rem">
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);padding:.2rem .55rem;border-radius:4px">Power BI</span>
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);padding:.2rem .55rem;border-radius:4px">DAX</span>
+                        <span style="font-family:var(--mono);font-size:.7rem;background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);padding:.2rem .55rem;border-radius:4px">KPI Tracking</span>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </section>
+
+
+        </section>
 
     <!-- EXPERIENCE -->
     <section id="experience">
@@ -515,19 +562,16 @@
             <h2 class="sec-title">Professional Experience</h2>
         </div>
         <div class="exp-wrap">
-
-            <!-- SERVE VISION -->
             <div class="exp-item">
                 <div class="exp-dot"></div>
                 <div class="exp-card">
                     <div class="exp-head">
                         <div>
+                            <img src="assets/serve-vision-logo.png" alt="Serve Vision" style="height:26px;width:auto;margin-bottom:.6rem;display:block;opacity:.92">
                             <div class="exp-role">Data Analyst</div>
                             <div class="exp-co">Serve Vision Pvt. Ltd. <span style="color:var(--text-3);font-size:.8rem;font-weight:400">· Main Company</span></div>
                         </div>
                         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5rem">
-                            <img src="assets/serve-vision-logo.png" alt="Serve Vision"
-                                 style="height:26px;width:auto;opacity:.92;display:block">
                             <span class="exp-date">Jun 2023 — Present</span>
                         </div>
                     </div>
@@ -545,12 +589,9 @@
                         <span class="stat-tag">8–10 hrs/week saved</span>
                         <span class="stat-tag">4 teams supported</span>
                     </div>
-
-                    <!-- Sub-company cards -->
                     <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)">
                         <p style="font-size:.72rem;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.85rem">Also Managing Data For</p>
                         <div class="sub-co-grid">
-                            <!-- HSIM -->
                             <div class="sub-co-card">
                                 <div class="sub-co-logo" style="background:#fff">
                                     <img src="assets/hsim-logo.png" alt="HSIM">
@@ -560,7 +601,6 @@
                                     <div class="sub-co-desc">Hindustan School of Internet Marketing — student lifecycle, fees, certifications & email automation. <strong style="color:var(--green)">↓ 6–8 hrs/week</strong></div>
                                 </div>
                             </div>
-                            <!-- CAP -->
                             <div class="sub-co-card">
                                 <div class="sub-co-logo" style="background:#1a2540">
                                     <img src="assets/cap-logo.png" alt="CAP">
@@ -574,8 +614,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- KWIKTECH -->
             <div class="exp-item">
                 <div class="exp-dot"></div>
                 <div class="exp-card">
@@ -596,7 +634,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -624,7 +661,6 @@
                 <div><div class="ach-title">Class XII — Commerce (CBSE)</div><div class="ach-sub">Completed 2015</div></div>
             </div>
         </div>
-
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem">
             <p style="font-size:.75rem;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem">Cross-Functional Impact — Accounts & HR</p>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem">
@@ -643,7 +679,7 @@
         </div>
         <p style="color:var(--text-2);margin-bottom:1.75rem;max-width:520px">Open to Data Analyst, MIS, and Automation roles. Feel free to reach out via any of the channels below.</p>
         <div class="contact-grid">
-            <a href="mailto:shubhamgrg33@gmail.com" class="cc"><i class="fa-solid fa-envelope"></i><h3>Email</h3><p>shubhamgrg33@gmail.com</p></a>
+            <a href="mailto:shubhamgrg33@gmail.com?subject=Reaching%20out%20%E2%80%94%20saw%20your%20portfolio" class="cc"><i class="fa-solid fa-envelope"></i><h3>Email</h3><p>shubhamgrg33@gmail.com</p></a>
             <a href="https://linkedin.com/in/shubham-garg53" target="_blank" class="cc"><i class="fa-brands fa-linkedin"></i><h3>LinkedIn</h3><p>linkedin.com/in/shubham-garg53</p></a>
             <a href="https://github.com/shubham-kumar" target="_blank" class="cc"><i class="fa-brands fa-github"></i><h3>GitHub</h3><p>github.com/shubham-kumar</p></a>
             <a href="tel:+917988078515" class="cc"><i class="fa-solid fa-phone"></i><h3>Phone</h3><p>+91 79880 78515</p></a>
@@ -657,7 +693,13 @@
 </div>
 
 <script>
-
+function switchTab(id, btn) {
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    btn.classList.add('active');
+    ['live','pipeline','upcoming'].forEach(function(t){
+        document.getElementById('tab-'+t).style.display = t===id ? 'grid' : 'none';
+    });
+}
 </script>
 </body>
 </html>
