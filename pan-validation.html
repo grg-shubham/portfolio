@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAN Number Validation — SQL | Shubham Garg</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+        :root{
+            --bg:#0B0F19;--card:#151D30;--card2:#0F172A;
+            --accent:#38BDF8;--accent-dim:rgba(56,189,248,.12);--accent-glow:rgba(56,189,248,.25);
+            --green:#22C55E;--green-dim:rgba(34,197,94,.12);
+            --red:#EF4444;--red-dim:rgba(239,68,68,.1);
+            --amber:#F59E0B;--amber-dim:rgba(245,158,11,.1);
+            --purple:#818CF8;--purple-dim:rgba(129,140,248,.1);
+            --t1:#F3F4F6;--t2:#9CA3AF;--t3:#6B7280;
+            --border:#1E2D45;--border-light:#24324F;
+            --sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;--r:10px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--t1);font-family:var(--sans);line-height:1.65;padding-bottom:5rem}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:var(--bg)}
+        ::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;width:100%;background:rgba(11,15,25,.92);
+            backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:1000;
+            display:flex;justify-content:space-between;align-items:center;padding:1rem 5%}
+        .nav-logo{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--t1);
+            display:flex;align-items:center;gap:.5rem;text-decoration:none}
+        .nav-logo i{color:var(--accent)}
+        .nav-links{display:flex;list-style:none;gap:1.75rem}
+        .nav-links a{color:var(--t2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .25s}
+        .nav-links a:hover{color:var(--accent)}
+        .nav-back{display:inline-flex;align-items:center;gap:.5rem;color:var(--t2);text-decoration:none;
+            font-family:var(--mono);font-size:.8rem;background:var(--card);
+            border:1px solid var(--border);padding:.4rem .9rem;border-radius:6px;transition:all .25s}
+        .nav-back:hover{color:var(--accent);border-color:var(--accent)}
+        .nav-email-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1.1rem;border-radius:6px;font-size:.82rem;font-weight:700;text-decoration:none;background:linear-gradient(135deg,var(--accent),#6366F1);color:#0B0F19;transition:all .3s;box-shadow:0 0 12px rgba(56,189,248,.2);white-space:nowrap}
+        .nav-email-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(56,189,248,.45)}
+
+        /* LAYOUT */
+        .container{max-width:1100px;margin:0 auto;padding:6rem 2rem 2rem}
+
+        /* HERO CARD */
+        .proj-hero{padding:2.5rem;background:var(--card);border:1px solid var(--border);
+            border-radius:var(--r);margin-bottom:2rem;position:relative;overflow:hidden}
+        .eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2.5px;margin-bottom:.6rem;display:block}
+        .proj-title{font-size:2.1rem;font-weight:800;margin-bottom:1rem;line-height:1.15}
+        .proj-summary{color:var(--t2);font-size:.98rem;max-width:780px;line-height:1.75}
+        .pill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem}
+        .pill{font-family:var(--mono);font-size:.73rem;background:#1E293B;color:var(--accent);
+            padding:.28rem .65rem;border-radius:5px;border:1px solid var(--border)}
+        .pill.green{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,.25)}
+        .pill.amber{color:var(--amber);background:var(--amber-dim);border-color:rgba(245,158,11,.25)}
+        .pill.purple{color:var(--purple);background:var(--purple-dim);border-color:rgba(129,140,248,.25)}
+
+        /* KPI ROW */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+        .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.5rem;position:relative;overflow:hidden;text-align:center}
+        .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+        .kpi.blue::before{background:var(--accent)}
+        .kpi.green::before{background:var(--green)}
+        .kpi.amber::before{background:var(--amber)}
+        .kpi.purple::before{background:var(--purple)}
+        .kpi-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;margin-bottom:.25rem}
+        .kpi.blue .kpi-val{color:var(--accent)}
+        .kpi.green .kpi-val{color:var(--green)}
+        .kpi.amber .kpi-val{color:var(--amber)}
+        .kpi.purple .kpi-val{color:var(--purple)}
+        .kpi-label{font-size:.8rem;color:var(--t2)}
+
+        /* DASHBOARD FRAME */
+        .frame-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:2rem;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .frame-bar{background:var(--card2);padding:.85rem 1.25rem;
+            display:flex;justify-content:space-between;align-items:center;
+            font-family:var(--mono);font-size:.76rem;color:var(--t2)}
+        .frame-bar.top{border-bottom:1px solid var(--border)}
+        .frame-bar.bottom{border-top:1px solid var(--border)}
+        .fdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.4rem}
+        .fdot.blue{background:var(--accent)}
+        .fdot.green{background:var(--green)}
+        .iframe-std{position:relative;width:100%;padding-bottom:56.25%;background:var(--card2)}
+        .iframe-std iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .iframe-tall{position:relative;width:100%;height:650px;background:var(--card2)}
+        .iframe-tall iframe{width:100%;height:100%;border:none}
+
+        /* SECTION */
+        .sec{margin-bottom:1.75rem}
+        .sec-label{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2px;margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+        .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+        .sec-title{font-size:1.35rem;font-weight:700;margin-bottom:.3rem}
+        .sec-sub{font-size:.9rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.6}
+
+        /* STORY GRID */
+        .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+        .story-card{border-radius:var(--r);padding:2rem;border:1px solid var(--border)}
+        .story-card.problem{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.2)}
+        .story-card.solution{background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.2)}
+        .story-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+        .sicon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+            justify-content:center;font-size:.95rem;flex-shrink:0}
+        .problem .sicon{background:var(--red-dim);color:var(--red)}
+        .solution .sicon{background:var(--green-dim);color:var(--green)}
+        .story-head h3{font-size:1rem;font-weight:700}
+        .problem .story-head h3{color:var(--red)}
+        .solution .story-head h3{color:var(--green)}
+        .story-intro{font-size:.88rem;color:var(--t2);margin-bottom:1.25rem;line-height:1.65}
+        .ps-list{list-style:none;display:flex;flex-direction:column;gap:.9rem}
+        .ps-item{display:flex;gap:.85rem;align-items:flex-start}
+        .psdot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+            justify-content:center;font-size:.65rem;margin-top:3px}
+        .problem .psdot{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+        .solution .psdot{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+        .ps-text strong{display:block;font-size:.88rem;color:var(--t1);margin-bottom:.18rem}
+        .ps-text p{font-size:.83rem;color:var(--t2);line-height:1.55}
+
+        /* IMPACT SECTION */
+        .impact-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem}
+        .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem}
+        .impact-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+        .impact-card i{font-size:1.15rem;margin-bottom:.7rem;display:block;color:var(--accent)}
+        .impact-card h4{font-size:.9rem;font-weight:600;margin-bottom:.35rem}
+        .impact-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
+
+        /* FEATURES GRID */
+        .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
+        .feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;
+            transition:border-color .25s}
+        .feat-card:hover{border-color:var(--accent)}
+        .feat-icon{width:38px;height:38px;background:var(--accent-dim);
+            border:1px solid rgba(56,189,248,.2);border-radius:8px;display:flex;
+            align-items:center;justify-content:center;color:var(--accent);font-size:.95rem;flex-shrink:0}
+        .feat-card h4{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+        .feat-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
+
+        /* CLIENT BANNER */
+        .client-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.75rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem}
+        .client-logo-box{border-radius:8px;padding:.4rem .85rem;
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;height:44px}
+        .client-logo-box img{height:32px;width:auto;display:block}
+        .client-info strong{font-size:.92rem}
+        .client-info p{color:var(--t2);font-size:.83rem;margin-top:.2rem}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .kpi-row{grid-template-columns:1fr 1fr}
+            .story-grid{grid-template-columns:1fr}
+            .impact-grid{grid-template-columns:1fr}
+            .feat-grid{grid-template-columns:1fr}
+            .proj-title{font-size:1.65rem}
+            nav{padding:.9rem 5%}
+            .nav-links{display:none}
+            .client-banner{flex-direction:column;align-items:flex-start}
+        }
+            background:linear-gradient(90deg,var(--accent),var(--purple))}
+    
+        .proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+            background:linear-gradient(90deg,var(--accent),var(--green))}
+
+        /* SQL CODE BLOCKS */
+        .sql-wrap{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:1.5rem}
+        .sql-bar{background:#0B1120;padding:.65rem 1.1rem;border-bottom:1px solid var(--border);
+            display:flex;justify-content:space-between;align-items:center;
+            font-family:var(--mono);font-size:.72rem;color:var(--t3)}
+        .sql-bar span{display:flex;align-items:center;gap:.45rem}
+        .sql-dot{width:7px;height:7px;border-radius:50%}
+        pre.sql{margin:0;padding:1.25rem 1.5rem;overflow-x:auto;font-family:var(--mono);
+            font-size:.8rem;line-height:1.75;color:#CBD5E1}
+        .kw{color:#7DD3FC}   /* SQL keywords */
+        .fn{color:#A78BFA}   /* functions */
+        .str{color:#86EFAC}  /* strings/values */
+        .cm{color:#475569;font-style:italic}  /* comments */
+        .nm{color:#FCA5A5}   /* numbers */
+
+        /* VALIDATION RULES */
+        .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
+        .rule-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.5rem;display:flex;gap:.85rem;align-items:flex-start}
+        .rule-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;
+            justify-content:center;font-size:.85rem;flex-shrink:0}
+        .rule-card h4{font-size:.88rem;font-weight:600;margin-bottom:.25rem}
+        .rule-card p{font-size:.8rem;color:var(--t2);line-height:1.5}
+        .rule-ex{font-family:var(--mono);font-size:.75rem;margin-top:.4rem;padding:.2rem .5rem;
+            border-radius:4px;display:inline-block}
+        .rule-ex.valid{background:var(--green-dim);color:var(--green)}
+        .rule-ex.invalid{background:var(--red-dim);color:var(--red)}
+
+        /* SUMMARY REPORT */
+        .summary-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem}
+        .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.25rem}
+        .sum-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;
+            padding:1.25rem;text-align:center}
+        .sum-val{font-family:var(--mono);font-size:1.6rem;font-weight:700;margin-bottom:.3rem}
+        .sum-label{font-size:.78rem;color:var(--t2)}
+
+        /* STEP FLOW */
+        .steps{display:flex;flex-direction:column;gap:0;margin-bottom:2rem}
+        .step{display:flex;gap:1.25rem;align-items:flex-start;position:relative}
+        .step:not(:last-child)::after{content:'';position:absolute;left:19px;top:42px;
+            width:2px;height:calc(100%);background:var(--border);z-index:0}
+        .step-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+            justify-content:center;font-family:var(--mono);font-size:.85rem;font-weight:700;
+            flex-shrink:0;z-index:1;border:2px solid var(--accent);
+            background:var(--accent-dim);color:var(--accent)}
+        .step-body{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.1rem 1.4rem;margin-bottom:1rem;flex:1}
+        .step-body h4{font-size:.92rem;font-weight:700;margin-bottom:.3rem}
+        .step-body p{font-size:.83rem;color:var(--t2);line-height:1.55}
+
+        /* PAN FORMAT VISUAL */
+        .pan-format{display:flex;gap:0;margin:1.25rem 0;font-family:var(--mono);font-size:1rem;font-weight:700}
+        .pan-seg{padding:.6rem 1rem;text-align:center;border-radius:0}
+        .pan-seg:first-child{border-radius:8px 0 0 8px}
+        .pan-seg:last-child{border-radius:0 8px 8px 0}
+        .pan-seg.alpha{background:rgba(56,189,248,.15);color:var(--accent);border:1px solid rgba(56,189,248,.3)}
+        .pan-seg.num{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25);border-left:none}
+        .pan-seg.last{background:rgba(129,140,248,.12);color:var(--purple);border:1px solid rgba(129,140,248,.25);border-left:none}
+        .pan-seg small{display:block;font-size:.6rem;font-weight:400;color:var(--t3);margin-top:.2rem}
+
+        @media(max-width:768px){
+            .rules-grid{grid-template-columns:1fr}
+            .summary-grid{grid-template-columns:1fr 1fr}
+        }
+    </style>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "xgkes0h7l5");
+    </script>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-chart-network"></i> SHUBHAM GARG</a>
+    <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="index.html#projects" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Projects</a>
+    <a href="mailto:shubhamgrg33@gmail.com?subject=Reaching%20out%20%E2%80%94%20saw%20your%20portfolio" class="nav-email-btn"><i class="fa-solid fa-envelope"></i> Let's Talk</a>
+</nav>
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="proj-hero">
+        <span class="eyebrow">Case Study &nbsp;// &nbsp;SQL &nbsp;·&nbsp; Data Cleaning &nbsp;·&nbsp; Data Validation &nbsp;·&nbsp; Custom Functions</span>
+        <h1 class="proj-title">PAN Number Validation — SQL Data Cleaning Project</h1>
+        <div class="pill-row">
+            <span class="pill"><i class="fa-solid fa-database" style="margin-right:.35rem"></i>SQL</span>
+            <span class="pill"><i class="fa-solid fa-broom" style="margin-right:.35rem"></i>Data Cleaning</span>
+            <span class="pill"><i class="fa-solid fa-shield-halved" style="margin-right:.35rem"></i>Data Validation</span>
+            <span class="pill"><i class="fa-solid fa-code" style="margin-right:.35rem"></i>Custom SQL Functions</span>
+            <span class="pill"><i class="fa-solid fa-layer-group" style="margin-right:.35rem"></i>CTEs & Views</span>
+            <span class="pill green">10,000 Records Processed</span>
+            <span class="pill green">3,186 Valid PANs Identified</span>
+            <span class="pill amber">Real Dataset · Full Audit</span>
+        </div>
+        <p class="proj-summary">A complete end-to-end SQL data cleaning and validation project on a real dataset of 10,000 Indian PAN numbers. The pipeline handles missing values, duplicates, whitespace, case correction — then validates every record against strict format rules using custom SQL functions — and produces a full categorized summary report.</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-val">10,000</div><div class="kpi-label">Raw Records in Dataset</div></div>
+        <div class="kpi green"><div class="kpi-val">3,186</div><div class="kpi-label">Valid PANs Identified</div></div>
+        <div class="kpi amber"><div class="kpi-val">5,840</div><div class="kpi-label">Invalid PANs Flagged</div></div>
+        <div class="kpi purple"><div class="kpi-val">965</div><div class="kpi-label">Missing / Null Records</div></div>
+    </div>
+
+    <!-- PAN FORMAT VISUAL -->
+    <div class="sec">
+        <div class="sec-label">PAN Format</div>
+        <div class="sec-title">What a Valid PAN Number Looks Like</div>
+        <div class="sec-sub">A PAN number is exactly 10 characters — 5 letters, 4 digits, 1 letter. Example: <strong style="color:var(--accent);font-family:var(--mono)">AHGVE1276F</strong></div>
+    </div>
+
+    <div class="pan-format">
+        <div class="pan-seg alpha">A H G V E<small>5 Uppercase Letters</small></div>
+        <div class="pan-seg num">1 2 7 6<small>4 Digits</small></div>
+        <div class="pan-seg last">F<small>1 Letter</small></div>
+    </div>
+
+    <!-- VALIDATION RULES -->
+    <div class="rules-grid">
+        <div class="rule-card">
+            <div class="rule-icon" style="background:var(--accent-dim);color:var(--accent)"><i class="fa-solid fa-font"></i></div>
+            <div>
+                <h4>First 5 Characters — Uppercase Letters</h4>
+                <p>Must be alphabetic A–Z. No adjacent characters can be the same. Cannot form a sequential pattern.</p>
+                <span class="rule-ex valid">✓ AHGVE — Valid</span>&nbsp;
+                <span class="rule-ex invalid">✗ AABCD — Adjacent repeat</span>&nbsp;
+                <span class="rule-ex invalid">✗ ABCDE — Sequential</span>
+            </div>
+        </div>
+        <div class="rule-card">
+            <div class="rule-icon" style="background:var(--green-dim);color:var(--green)"><i class="fa-solid fa-hashtag"></i></div>
+            <div>
+                <h4>Next 4 Characters — Digits Only</h4>
+                <p>Must be numeric 0–9. No adjacent digits can be the same. Cannot form a sequential pattern.</p>
+                <span class="rule-ex valid">✓ 1276 — Valid</span>&nbsp;
+                <span class="rule-ex invalid">✗ 1123 — Adjacent repeat</span>&nbsp;
+                <span class="rule-ex invalid">✗ 1234 — Sequential</span>
+            </div>
+        </div>
+        <div class="rule-card">
+            <div class="rule-icon" style="background:var(--purple-dim);color:var(--purple)"><i class="fa-solid fa-a"></i></div>
+            <div>
+                <h4>Last Character — Single Uppercase Letter</h4>
+                <p>The 10th and final character must be an alphabetic uppercase letter A–Z.</p>
+                <span class="rule-ex valid">✓ F — Valid</span>&nbsp;
+                <span class="rule-ex invalid">✗ 9 — Digit, not letter</span>
+            </div>
+        </div>
+        <div class="rule-card">
+            <div class="rule-icon" style="background:var(--red-dim);color:var(--red)"><i class="fa-solid fa-ruler"></i></div>
+            <div>
+                <h4>Exactly 10 Characters</h4>
+                <p>Any PAN shorter or longer than 10 characters is automatically invalid regardless of content.</p>
+                <span class="rule-ex valid">✓ AHGVE1276F — 10 chars</span>&nbsp;
+                <span class="rule-ex invalid">✗ AHGVE127 — Only 9 chars</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- STORY -->
+    <div class="sec">
+        <div class="sec-label">The Full Story</div>
+        <div class="sec-title">Problem → Solution → Real Business Impact</div>
+        <div class="sec-sub">What the data problem was, how SQL solved it, and what the output delivers.</div>
+    </div>
+
+    <div class="story-grid">
+        <div class="story-card problem">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>The Data Quality Problem</h3>
+            </div>
+            <p class="story-intro">A dataset of 10,000 PAN numbers arrived with multiple quality issues making it impossible to use directly for compliance or reporting purposes without a structured cleaning pipeline.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>965 Missing / Null Records</strong>
+                        <p>Nearly 10% of the dataset had null or empty PAN values — these needed to be identified, counted, and excluded from validation without losing the audit trail.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Duplicate Entries</strong>
+                        <p>9 duplicate PAN numbers were present — counting them multiple times would inflate valid counts and produce incorrect compliance reports.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Inconsistent Formatting — Spaces & Lowercase</strong>
+                        <p>Many records had leading/trailing spaces (e.g. "hyuij7902r  ") and lowercase letters (e.g. "hvofe5635y") that would fail validation even if structurally correct.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>No Standard Validation Logic Existed</strong>
+                        <p>The standard PAN regex alone isn't sufficient — you also need to check for adjacent repeating characters and sequential patterns, which required custom SQL functions.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="story-card solution">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3>How SQL Solved It — Step by Step</h3>
+            </div>
+            <p class="story-intro">Built a complete SQL pipeline: stage table → cleaning → custom validation functions → categorization view → summary report. Every step is auditable and reproducible.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Stage Table → Clean Table</strong>
+                        <p>Raw data loaded into a staging table. A cleaned table is created using DISTINCT + UPPER() + TRIM() — removing duplicates, fixing case, and stripping spaces in one query.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Custom Function — Adjacent Character Check</strong>
+                        <p>A custom SQL function loops through each character pair and returns TRUE if any two adjacent characters are the same — catching invalid patterns like AABCD or 1123.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Custom Function — Sequential Pattern Check</strong>
+                        <p>A second function checks if characters form a sequential pattern (ABCDE, 1234 etc.) by comparing ASCII values of consecutive characters — returning TRUE if sequential.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Validation View + Summary Report CTE</strong>
+                        <p>A SQL View categorises every cleaned PAN as Valid or Invalid. A CTE-based summary report then gives total processed, valid, invalid, and missing counts in one query.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- STEP BY STEP -->
+    <div class="sec">
+        <div class="sec-label">SQL Pipeline</div>
+        <div class="sec-title">Step-by-Step Query Breakdown</div>
+        <div class="sec-sub">Every SQL step in the pipeline — from raw data to final report.</div>
+    </div>
+
+    <div class="steps">
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <h4>Create Stage Table & Load Raw Data</h4>
+                <p>Raw dataset loaded into a staging table as-is — preserving original data for audit trail before any cleaning begins.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <h4>Identify Data Quality Issues</h4>
+                <p>Separate queries to count nulls, find duplicates, detect trailing spaces, and check for lowercase — building a complete picture of what needs fixing.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <h4>Create Cleaned Table</h4>
+                <p>One query creates the clean table: DISTINCT removes duplicates, TRIM() strips spaces, UPPER() fixes case — all null and blank rows excluded.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+                <h4>Custom Function — Adjacent Repetition Check</h4>
+                <p>Loops through character pairs using SUBSTRING() — returns TRUE if any adjacent pair matches. Used to catch AABCD (letters) and 1123 (digits).</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+                <h4>Custom Function — Sequential Pattern Check</h4>
+                <p>Checks ASCII differences between consecutive characters — if every difference is exactly 1, it's sequential. Catches ABCDE and 1234 type patterns.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">6</div>
+            <div class="step-body">
+                <h4>Validation View — Valid vs Invalid Categorization</h4>
+                <p>A SQL View using CTEs applies all rules: regex format check, both custom functions on letter and digit segments. Every PAN gets a "Valid PAN" or "Invalid PAN" label.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">7</div>
+            <div class="step-body">
+                <h4>Summary Report — Final CTE Query</h4>
+                <p>A single CTE query produces the complete audit report: total processed, valid count, invalid count, and missing/incomplete PANs calculated from the stage table.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- KEY SQL SNIPPETS -->
+    <div class="sec">
+        <div class="sec-label">SQL Code</div>
+        <div class="sec-title">Key Queries from the Project</div>
+        <div class="sec-sub">The most important SQL written for this pipeline.</div>
+    </div>
+
+    <!-- Data Cleaning Query -->
+    <div class="sql-wrap">
+        <div class="sql-bar">
+            <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+            <span>Step 1 — Create Cleaned Table</span>
+        </div>
+        <pre class="sql"><span class="kw">CREATE TABLE</span> pan_numbers_dataset_cleaned
+<span class="kw">AS</span>
+<span class="kw">SELECT DISTINCT</span>
+    <span class="fn">UPPER</span>(<span class="fn">TRIM</span>(pan_number)) <span class="kw">AS</span> pan_number
+<span class="kw">FROM</span> stg_pan_numbers_dataset
+<span class="kw">WHERE</span> pan_number <span class="kw">IS NOT NULL</span>
+  <span class="kw">AND</span> <span class="fn">TRIM</span>(pan_number) <> <span class="str">''</span>;
+<span class="cm">-- Removes: nulls, blanks, duplicates, fixes case & spaces in one query</span></pre>
+    </div>
+
+    <!-- Adjacent function -->
+    <div class="sql-wrap">
+        <div class="sql-bar">
+            <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+            <span>Step 2 — Custom Function: Adjacent Repetition Check</span>
+        </div>
+        <pre class="sql"><span class="kw">CREATE OR REPLACE FUNCTION</span> <span class="fn">fn_check_adjacent_repetition</span>(p_str <span class="kw">TEXT</span>)
+<span class="kw">RETURNS BOOLEAN</span>
+<span class="kw">LANGUAGE</span> plpgsql
+<span class="kw">AS</span> 538
+<span class="kw">BEGIN</span>
+    <span class="kw">FOR</span> i <span class="kw">IN</span> <span class="nm">1</span> .. (<span class="fn">LENGTH</span>(p_str) - <span class="nm">1</span>) <span class="kw">LOOP</span>
+        <span class="kw">IF</span> <span class="fn">SUBSTRING</span>(p_str, i, <span class="nm">1</span>) = <span class="fn">SUBSTRING</span>(p_str, i+<span class="nm">1</span>, <span class="nm">1</span>)
+        <span class="kw">THEN</span>
+            <span class="kw">RETURN TRUE</span>;  <span class="cm">-- Adjacent repeat found</span>
+        <span class="kw">END IF</span>;
+    <span class="kw">END LOOP</span>;
+    <span class="kw">RETURN FALSE</span>;  <span class="cm">-- No adjacent repetition</span>
+<span class="kw">END</span>;
+538
+<span class="cm">-- Usage: fn_check_adjacent_repetition('AABCD') → TRUE (invalid)</span>
+<span class="cm">--        fn_check_adjacent_repetition('AHGVE') → FALSE (valid)</span></pre>
+    </div>
+
+    <!-- Sequential function -->
+    <div class="sql-wrap">
+        <div class="sql-bar">
+            <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+            <span>Step 3 — Custom Function: Sequential Pattern Check</span>
+        </div>
+        <pre class="sql"><span class="kw">CREATE OR REPLACE FUNCTION</span> <span class="fn">fn_check_sequence</span>(p_str <span class="kw">TEXT</span>)
+<span class="kw">RETURNS BOOLEAN</span>
+<span class="kw">LANGUAGE</span> plpgsql
+<span class="kw">AS</span> 538
+<span class="kw">BEGIN</span>
+    <span class="kw">FOR</span> i <span class="kw">IN</span> <span class="nm">1</span> .. (<span class="fn">LENGTH</span>(p_str) - <span class="nm">1</span>) <span class="kw">LOOP</span>
+        <span class="kw">IF</span> <span class="fn">ASCII</span>(<span class="fn">SUBSTRING</span>(p_str, i+<span class="nm">1</span>, <span class="nm">1</span>)) - <span class="fn">ASCII</span>(<span class="fn">SUBSTRING</span>(p_str, i, <span class="nm">1</span>)) <> <span class="nm">1</span>
+        <span class="kw">THEN</span>
+            <span class="kw">RETURN FALSE</span>;  <span class="cm">-- Not sequential</span>
+        <span class="kw">END IF</span>;
+    <span class="kw">END LOOP</span>;
+    <span class="kw">RETURN TRUE</span>;  <span class="cm">-- All characters are sequential</span>
+<span class="kw">END</span>;
+538
+<span class="cm">-- Usage: fn_check_sequence('ABCDE') → TRUE (invalid — sequential)</span>
+<span class="cm">--        fn_check_sequence('AHGVE') → FALSE (valid — not sequential)</span></pre>
+    </div>
+
+    <!-- Validation view -->
+    <div class="sql-wrap">
+        <div class="sql-bar">
+            <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+            <span>Step 4 — Validation View: Valid vs Invalid Categorization</span>
+        </div>
+        <pre class="sql"><span class="kw">CREATE OR REPLACE VIEW</span> vw_valid_invalid_pans <span class="kw">AS</span>
+<span class="kw">WITH</span> cte_cleaned_pan <span class="kw">AS</span> (
+    <span class="kw">SELECT DISTINCT</span> <span class="fn">UPPER</span>(<span class="fn">TRIM</span>(pan_number)) <span class="kw">AS</span> pan_number
+    <span class="kw">FROM</span> stg_pan_numbers_dataset
+    <span class="kw">WHERE</span> pan_number <span class="kw">IS NOT NULL</span> <span class="kw">AND</span> <span class="fn">TRIM</span>(pan_number) <> <span class="str">''</span>
+),
+cte_valid_pan <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> * <span class="kw">FROM</span> cte_cleaned_pan
+    <span class="kw">WHERE</span>
+        <span class="fn">fn_check_adjacent_repetition</span>(pan_number) = <span class="str">'false'</span>
+        <span class="kw">AND</span> <span class="fn">fn_check_sequence</span>(<span class="fn">SUBSTRING</span>(pan_number,<span class="nm">1</span>,<span class="nm">5</span>)) = <span class="str">'false'</span>
+        <span class="kw">AND</span> <span class="fn">fn_check_sequence</span>(<span class="fn">SUBSTRING</span>(pan_number,<span class="nm">6</span>,<span class="nm">4</span>)) = <span class="str">'false'</span>
+        <span class="kw">AND</span> pan_number ~ <span class="str">'^[A-Z]{5}[0-9]{4}[A-Z]$'</span>
+)
+<span class="kw">SELECT</span>
+    cln.pan_number,
+    <span class="kw">CASE WHEN</span> vld.pan_number <span class="kw">IS NULL</span>
+        <span class="kw">THEN</span> <span class="str">'Invalid PAN'</span>
+        <span class="kw">ELSE</span> <span class="str">'Valid PAN'</span>
+    <span class="kw">END AS</span> status
+<span class="kw">FROM</span> cte_cleaned_pan cln
+<span class="kw">LEFT JOIN</span> cte_valid_pan vld <span class="kw">ON</span> vld.pan_number = cln.pan_number;</pre>
+    </div>
+
+    <!-- Summary Report -->
+    <div class="sql-wrap">
+        <div class="sql-bar">
+            <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+            <span>Step 5 — Final Summary Report</span>
+        </div>
+        <pre class="sql"><span class="kw">WITH</span> cte <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        (<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> stg_pan_numbers_dataset) <span class="kw">AS</span> total_processed_records,
+        <span class="fn">COUNT</span>(*) <span class="fn">FILTER</span> (<span class="kw">WHERE</span> vw.status = <span class="str">'Valid PAN'</span>)   <span class="kw">AS</span> total_valid_pans,
+        <span class="fn">COUNT</span>(*) <span class="fn">FILTER</span> (<span class="kw">WHERE</span> vw.status = <span class="str">'Invalid PAN'</span>) <span class="kw">AS</span> total_invalid_pans
+    <span class="kw">FROM</span> vw_valid_invalid_pans vw
+)
+<span class="kw">SELECT</span>
+    total_processed_records,
+    total_valid_pans,
+    total_invalid_pans,
+    total_processed_records - (total_valid_pans + total_invalid_pans) <span class="kw">AS</span> missing_incomplete_pans
+<span class="kw">FROM</span> cte;</pre>
+    </div>
+
+    <!-- SUMMARY REPORT RESULTS -->
+    <div class="summary-box">
+        <div class="sec-label">Final Output</div>
+        <div class="sec-title">Summary Report Results — Actual Dataset</div>
+        <p style="color:var(--t2);font-size:.88rem;margin-top:.35rem">Output from running the summary report query on the raw 10,000 record dataset. Note: 9 duplicates removed during cleaning → 9,991 unique records → 965 null/missing → 9,026 records validated → 3,186 valid + 5,840 invalid = 9,026 ✓</p>
+        <div class="summary-grid">
+            <div class="sum-card">
+                <div class="sum-val" style="color:var(--accent)">10,000</div>
+                <div class="sum-label">Total Records Processed</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-val" style="color:var(--green)">3,186</div>
+                <div class="sum-label">Total Valid PANs</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-val" style="color:var(--red)">5,840</div>
+                <div class="sum-label">Total Invalid PANs</div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-val" style="color:var(--amber)">965</div>
+                <div class="sum-label">Missing / Incomplete</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPACT -->
+    <div class="impact-wrap">
+        <div class="sec-label">Skills Demonstrated</div>
+        <div class="sec-title">What This Project Shows a Recruiter</div>
+        <p class="sec-sub" style="margin-bottom:0">The SQL skills and data engineering capabilities demonstrated across this project.</p>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <i class="fa-solid fa-broom"></i>
+                <h4>Data Cleaning Pipeline</h4>
+                <p>Structured multi-step approach: stage → clean → validate. Handles nulls, duplicates, whitespace, and case in a single reproducible query chain.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-code"></i>
+                <h4>Custom SQL Functions</h4>
+                <p>Wrote two reusable functions — adjacent repetition check and sequential pattern check — using loops, ASCII comparison, and SUBSTRING operations.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-layer-group"></i>
+                <h4>CTEs & SQL Views</h4>
+                <p>Used CTEs for modular query design and a SQL View for reusable validation logic — clean, readable, and maintainable SQL architecture.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <h4>Regex Pattern Matching</h4>
+                <p>Applied regex (^[A-Z]{5}[0-9]{4}[A-Z]$) for format validation — demonstrating practical use of pattern matching in SQL queries.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-file-lines"></i>
+                <h4>Audit-Ready Reporting</h4>
+                <p>Final CTE summary query produces a management-ready report with all four key metrics in one clean output — total, valid, invalid, and missing counts.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-database"></i>
+                <h4>Real Dataset — 10,000 Records</h4>
+                <p>Applied to a real dataset with genuine data quality issues — not synthetic perfect data. Reflects the kind of messy real-world data analysts deal with daily.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

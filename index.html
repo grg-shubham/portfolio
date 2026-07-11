@@ -325,14 +325,10 @@
             <h2 class="sec-title">Projects & Case Studies</h2>
         </div>
 
-        <div class="tab-row">
-            <button class="tab active" onclick="switchTab('live',this)">Live Systems</button>
-            <button class="tab" onclick="switchTab('pipeline',this)">Data Pipelines</button>
-            <button class="tab" onclick="switchTab('upcoming',this)">Upcoming</button>
-        </div>
+
 
         <!-- LIVE SYSTEMS -->
-        <div id="tab-live" class="proj-grid">
+        <div class="proj-grid">
 
             <div class="proj-card" style="border-color:rgba(234,100,54,.35);position:relative">
                 <div style="position:absolute;top:-1px;right:1.25rem;background:linear-gradient(135deg,#EA6436,#F97316);color:#0B0F19;font-family:var(--mono);font-size:.68rem;font-weight:700;padding:.25rem .7rem;border-radius:0 0 6px 6px;letter-spacing:.5px">FEATURED</div>
@@ -364,6 +360,41 @@
                 <div style="display:flex;gap:.75rem;flex-wrap:wrap">
                     <a href="call-analytics.html" class="btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Full Case Study</a>
                     <a href="Audio_transcribe_with_open_AI_whisper.json" download class="btn-sm" style="background:rgba(234,100,54,.12);border-color:rgba(234,100,54,.3);color:#EA6436"><i class="fa-solid fa-arrow-down-to-line"></i> Download N8N Workflow</a>
+                </div>
+            </div>
+
+            <div class="proj-card" style="border-color:rgba(168,85,247,.35);position:relative">
+                <div style="position:absolute;top:-1px;right:1.25rem;background:linear-gradient(135deg,#A855F7,#EC4899);color:#fff;font-family:var(--mono);font-size:.68rem;font-weight:700;padding:.25rem .7rem;border-radius:0 0 6px 6px;letter-spacing:.5px">FEATURED</div>
+                <div class="proj-head">
+                    <div class="proj-icon" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3);color:#A855F7"><i class="fa-solid fa-diagram-project"></i></div>
+                    <a href="article-publisher.html" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </div>
+                <div class="proj-title">Article Publisher — AI Content Engine</div>
+                <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.25rem">
+                    <span style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(234,100,54,.12);border:1px solid rgba(234,100,54,.3);color:#EA6436;font-family:var(--mono);font-size:.7rem;padding:.2rem .55rem;border-radius:4px;font-weight:600"><i class="fa-solid fa-diagram-project"></i> N8N · 36 Nodes</span>
+                    <span style="display:inline-flex;align-items:center;gap:.35rem;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);color:#A855F7;font-family:var(--mono);font-size:.7rem;padding:.2rem .55rem;border-radius:4px;font-weight:600">✦ Multi-Agent</span>
+                    <span style="display:inline-flex;align-items:center;gap:.35rem;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);color:var(--accent);font-family:var(--mono);font-size:.7rem;padding:.2rem .55rem;border-radius:4px;font-weight:600">✦ Multi-Website</span>
+                </div>
+                <div class="proj-desc">A <strong style="color:#A855F7">Multi-Agent AI</strong> pipeline that reads keywords from <strong style="color:var(--accent)">Google Sheets</strong>, researches, writes SEO articles, processes images, adds internal links, and publishes across <strong style="color:var(--accent)">3 WordPress sites</strong> automatically. One workflow, multiple agents, multiple websites — zero manual steps.</div>
+                <div class="impact-box">
+                    <p>Measurable Impact</p>
+                    <div class="impact-badges">
+                        <span class="ibadge">Multi-Agent AI</span>
+                        <span class="ibadge">Multi-Website</span>
+                        <span class="ibadge">Google Sheets Data Hub</span>
+                        <span class="ibadge">100% Auto Publishing</span>
+                    </div>
+                </div>
+                <div class="pill-row">
+                    <span class="pill">N8N</span>
+                    <span class="pill">OpenRouter AI</span>
+                    <span class="pill">WordPress API</span>
+                    <span class="pill">Google Sheets</span>
+                    <span class="pill">LangChain Agent</span>
+                </div>
+                <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+                    <a href="article-publisher.html" class="btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Full Case Study</a>
+                    <a href="1_Man_army.json" download class="btn-sm" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3);color:#A855F7"><i class="fa-solid fa-arrow-down-to-line"></i> Download N8N Workflow</a>
                 </div>
             </div>
             <div class="proj-card">
@@ -434,80 +465,34 @@
         </div>
 
         <!-- DATA PIPELINES -->
-        <div id="tab-pipeline" class="proj-grid" style="display:none">
+        <!-- SQL & Upcoming -->
 
-            <div class="proj-card" style="border-color:rgba(168,85,247,.35);position:relative">
-                <div style="position:absolute;top:-1px;right:1.25rem;background:linear-gradient(135deg,#A855F7,#EC4899);color:#fff;font-family:var(--mono);font-size:.68rem;font-weight:700;padding:.25rem .7rem;border-radius:0 0 6px 6px;letter-spacing:.5px">FEATURED</div>
+            <div class="proj-card">
                 <div class="proj-head">
-                    <div class="proj-icon" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3);color:#A855F7"><i class="fa-solid fa-diagram-project"></i></div>
-                    <a href="article-publisher.html" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    <div class="proj-icon" style="background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.2);color:var(--accent)"><i class="fa-solid fa-database"></i></div>
+                    <a href="pan-validation.html" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 </div>
-                <div class="proj-title">Article Publisher — AI Content Engine</div>
-                <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.25rem">
-                    <span style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(234,100,54,.12);border:1px solid rgba(234,100,54,.3);color:#EA6436;font-family:var(--mono);font-size:.7rem;padding:.2rem .55rem;border-radius:4px;font-weight:600"><i class="fa-solid fa-diagram-project"></i> N8N · 36 Nodes</span>
-                    <span style="display:inline-flex;align-items:center;gap:.35rem;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);color:#A855F7;font-family:var(--mono);font-size:.7rem;padding:.2rem .55rem;border-radius:4px;font-weight:600">✦ Multi-Agent</span>
-                    <span style="display:inline-flex;align-items:center;gap:.35rem;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);color:var(--accent);font-family:var(--mono);font-size:.7rem;padding:.2rem .55rem;border-radius:4px;font-weight:600">✦ Multi-Website</span>
-                </div>
-                <div class="proj-desc">A <strong style="color:#A855F7">Multi-Agent AI</strong> pipeline that reads keywords from <strong style="color:var(--accent)">Google Sheets</strong>, researches, writes SEO articles, processes images, adds internal links, and publishes across <strong style="color:var(--accent)">3 WordPress sites</strong> automatically. One workflow, multiple agents, multiple websites — zero manual steps.</div>
+                <div class="proj-title">PAN Number Validation — SQL Data Cleaning</div>
+                <div class="proj-desc">A complete SQL data cleaning and validation project on 10,000 PAN number records. Handles nulls, duplicates, case correction, and validates format using custom SQL functions — categorising every record as Valid or Invalid with a full summary report.</div>
                 <div class="impact-box">
                     <p>Measurable Impact</p>
                     <div class="impact-badges">
-                        <span class="ibadge">Multi-Agent AI</span>
-                        <span class="ibadge">Multi-Website</span>
-                        <span class="ibadge">Google Sheets Data Hub</span>
-                        <span class="ibadge">100% Auto Publishing</span>
+                        <span class="ibadge">10,000 Records Processed</span>
+                        <span class="ibadge">3,186 Valid PANs Found</span>
+                        <span class="ibadge">Custom SQL Functions</span>
+                        <span class="ibadge">Full Audit Report</span>
                     </div>
                 </div>
                 <div class="pill-row">
-                    <span class="pill">N8N</span>
-                    <span class="pill">OpenRouter AI</span>
-                    <span class="pill">WordPress API</span>
-                    <span class="pill">Google Sheets</span>
-                    <span class="pill">LangChain Agent</span>
+                    <span class="pill">SQL</span>
+                    <span class="pill">Data Cleaning</span>
+                    <span class="pill">Regex Validation</span>
+                    <span class="pill">Custom Functions</span>
+                    <span class="pill">CTEs & Views</span>
                 </div>
-                <div style="display:flex;gap:.75rem;flex-wrap:wrap">
-                    <a href="article-publisher.html" class="btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Full Case Study</a>
-                    <a href="1_Man_army.json" download class="btn-sm" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.3);color:#A855F7"><i class="fa-solid fa-arrow-down-to-line"></i> Download N8N Workflow</a>
-                </div>
+                <a href="pan-validation.html" class="btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Full Case Study</a>
             </div>
 
-            <div class="proj-card">
-                <div class="proj-head"><div class="proj-icon"><i class="fa-solid fa-rss"></i></div></div>
-                <div class="proj-title">AI Content Publishing Engine</div>
-                <div class="proj-desc">N8N workflow connecting Google Sheets with OpenAI API and WordPress REST API to automatically filter, structure, and publish localized articles to live WordPress endpoints — zero manual uploads.</div>
-                <div class="impact-box">
-                    <p>Measurable Impact</p>
-                    <div class="impact-badges">
-                        <span class="ibadge">Fully automated publishing</span>
-                        <span class="ibadge">↓ 8–10 hrs/week saved</span>
-                        <span class="ibadge">Consistent output</span>
-                    </div>
-                </div>
-                <div class="pill-row">
-                    <span class="pill">N8N</span><span class="pill">OpenAI API</span><span class="pill">WordPress REST API</span><span class="pill">Google Sheets</span>
-                </div>
-            </div>
-
-            <div class="proj-card">
-                <div class="proj-head"><div class="proj-icon"><i class="fa-solid fa-database"></i></div></div>
-                <div class="proj-title">Centralized BI Data Pipeline</div>
-                <div class="proj-desc">Automated data pipelines using Google Sheets + SQL for cleaning and transformation, feeding into Looker Studio dashboards for real-time MIS and KPI tracking across the organization.</div>
-                <div class="impact-box">
-                    <p>Measurable Impact</p>
-                    <div class="impact-badges">
-                        <span class="ibadge">↓ 70% manual effort</span>
-                        <span class="ibadge">Real-time KPIs</span>
-                        <span class="ibadge">↓ 1.5 hrs/day monitoring</span>
-                    </div>
-                </div>
-                <div class="pill-row">
-                    <span class="pill">Looker Studio</span><span class="pill">SQL</span><span class="pill">Power Query</span><span class="pill">Google Sheets</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- UPCOMING -->
-        <div id="tab-upcoming" class="proj-grid" style="display:none">
             <div class="proj-card">
                 <div class="proj-head"><div class="proj-icon"><i class="fa-solid fa-server"></i></div></div>
                 <div class="proj-title">SQL Case Studies & Query Optimization</div>
@@ -672,13 +657,7 @@
 </div>
 
 <script>
-function switchTab(id, btn) {
-    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
-    btn.classList.add('active');
-    ['live','pipeline','upcoming'].forEach(function(t){
-        document.getElementById('tab-'+t).style.display = t===id ? 'grid' : 'none';
-    });
-}
+
 </script>
 </body>
 </html>
