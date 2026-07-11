@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Publisher — AI Content Engine | Shubham Garg</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+        :root{
+            --bg:#0B0F19;--card:#151D30;--card2:#0F172A;
+            --accent:#38BDF8;--accent-dim:rgba(56,189,248,.12);--accent-glow:rgba(56,189,248,.25);
+            --green:#22C55E;--green-dim:rgba(34,197,94,.12);
+            --red:#EF4444;--red-dim:rgba(239,68,68,.1);
+            --amber:#F59E0B;--amber-dim:rgba(245,158,11,.1);
+            --purple:#818CF8;--purple-dim:rgba(129,140,248,.1);
+            --t1:#F3F4F6;--t2:#9CA3AF;--t3:#6B7280;
+            --border:#1E2D45;--border-light:#24324F;
+            --sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;--r:10px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--t1);font-family:var(--sans);line-height:1.65;padding-bottom:5rem}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:var(--bg)}
+        ::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;width:100%;background:rgba(11,15,25,.92);
+            backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:1000;
+            display:flex;justify-content:space-between;align-items:center;padding:1rem 5%}
+        .nav-logo{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--t1);
+            display:flex;align-items:center;gap:.5rem;text-decoration:none}
+        .nav-logo i{color:var(--accent)}
+        .nav-links{display:flex;list-style:none;gap:1.75rem}
+        .nav-links a{color:var(--t2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .25s}
+        .nav-links a:hover{color:var(--accent)}
+        .nav-back{display:inline-flex;align-items:center;gap:.5rem;color:var(--t2);text-decoration:none;
+            font-family:var(--mono);font-size:.8rem;background:var(--card);
+            border:1px solid var(--border);padding:.4rem .9rem;border-radius:6px;transition:all .25s}
+        .nav-back:hover{color:var(--accent);border-color:var(--accent)}
+        .nav-email-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1.1rem;border-radius:6px;font-size:.82rem;font-weight:700;text-decoration:none;background:linear-gradient(135deg,var(--accent),#6366F1);color:#0B0F19;transition:all .3s;box-shadow:0 0 12px rgba(56,189,248,.2);white-space:nowrap}
+        .nav-email-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(56,189,248,.45)}
+
+        /* LAYOUT */
+        .container{max-width:1100px;margin:0 auto;padding:6rem 2rem 2rem}
+
+        /* HERO CARD */
+        .proj-hero{padding:2.5rem;background:var(--card);border:1px solid var(--border);
+            border-radius:var(--r);margin-bottom:2rem;position:relative;overflow:hidden}
+        .eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2.5px;margin-bottom:.6rem;display:block}
+        .proj-title{font-size:2.1rem;font-weight:800;margin-bottom:1rem;line-height:1.15}
+        .proj-summary{color:var(--t2);font-size:.98rem;max-width:780px;line-height:1.75}
+        .pill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem}
+        .pill{font-family:var(--mono);font-size:.73rem;background:#1E293B;color:var(--accent);
+            padding:.28rem .65rem;border-radius:5px;border:1px solid var(--border)}
+        .pill.green{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,.25)}
+        .pill.amber{color:var(--amber);background:var(--amber-dim);border-color:rgba(245,158,11,.25)}
+        .pill.purple{color:var(--purple);background:var(--purple-dim);border-color:rgba(129,140,248,.25)}
+
+        /* KPI ROW */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+        .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.5rem;position:relative;overflow:hidden;text-align:center}
+        .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+        .kpi.blue::before{background:var(--accent)}
+        .kpi.green::before{background:var(--green)}
+        .kpi.amber::before{background:var(--amber)}
+        .kpi.purple::before{background:var(--purple)}
+        .kpi-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;margin-bottom:.25rem}
+        .kpi.blue .kpi-val{color:var(--accent)}
+        .kpi.green .kpi-val{color:var(--green)}
+        .kpi.amber .kpi-val{color:var(--amber)}
+        .kpi.purple .kpi-val{color:var(--purple)}
+        .kpi-label{font-size:.8rem;color:var(--t2)}
+
+        /* DASHBOARD FRAME */
+        .frame-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:2rem;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .frame-bar{background:var(--card2);padding:.85rem 1.25rem;
+            display:flex;justify-content:space-between;align-items:center;
+            font-family:var(--mono);font-size:.76rem;color:var(--t2)}
+        .frame-bar.top{border-bottom:1px solid var(--border)}
+        .frame-bar.bottom{border-top:1px solid var(--border)}
+        .fdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.4rem}
+        .fdot.blue{background:var(--accent)}
+        .fdot.green{background:var(--green)}
+        .iframe-std{position:relative;width:100%;padding-bottom:56.25%;background:var(--card2)}
+        .iframe-std iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .iframe-tall{position:relative;width:100%;height:650px;background:var(--card2)}
+        .iframe-tall iframe{width:100%;height:100%;border:none}
+
+        /* SECTION */
+        .sec{margin-bottom:1.75rem}
+        .sec-label{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2px;margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+        .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+        .sec-title{font-size:1.35rem;font-weight:700;margin-bottom:.3rem}
+        .sec-sub{font-size:.9rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.6}
+
+        /* STORY GRID */
+        .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+        .story-card{border-radius:var(--r);padding:2rem;border:1px solid var(--border)}
+        .story-card.problem{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.2)}
+        .story-card.solution{background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.2)}
+        .story-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+        .sicon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+            justify-content:center;font-size:.95rem;flex-shrink:0}
+        .problem .sicon{background:var(--red-dim);color:var(--red)}
+        .solution .sicon{background:var(--green-dim);color:var(--green)}
+        .story-head h3{font-size:1rem;font-weight:700}
+        .problem .story-head h3{color:var(--red)}
+        .solution .story-head h3{color:var(--green)}
+        .story-intro{font-size:.88rem;color:var(--t2);margin-bottom:1.25rem;line-height:1.65}
+        .ps-list{list-style:none;display:flex;flex-direction:column;gap:.9rem}
+        .ps-item{display:flex;gap:.85rem;align-items:flex-start}
+        .psdot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+            justify-content:center;font-size:.65rem;margin-top:3px}
+        .problem .psdot{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+        .solution .psdot{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+        .ps-text strong{display:block;font-size:.88rem;color:var(--t1);margin-bottom:.18rem}
+        .ps-text p{font-size:.83rem;color:var(--t2);line-height:1.55}
+
+        /* IMPACT SECTION */
+        .impact-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem}
+        .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem}
+        .impact-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+        .impact-card i{font-size:1.15rem;margin-bottom:.7rem;display:block;color:var(--accent)}
+        .impact-card h4{font-size:.9rem;font-weight:600;margin-bottom:.35rem}
+        .impact-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
+
+        /* FEATURES GRID */
+        .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
+        .feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;
+            transition:border-color .25s}
+        .feat-card:hover{border-color:var(--accent)}
+        .feat-icon{width:38px;height:38px;background:var(--accent-dim);
+            border:1px solid rgba(56,189,248,.2);border-radius:8px;display:flex;
+            align-items:center;justify-content:center;color:var(--accent);font-size:.95rem;flex-shrink:0}
+        .feat-card h4{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+        .feat-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
+
+        /* CLIENT BANNER */
+        .client-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.75rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem}
+        .client-logo-box{border-radius:8px;padding:.4rem .85rem;
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;height:44px}
+        .client-logo-box img{height:32px;width:auto;display:block}
+        .client-info strong{font-size:.92rem}
+        .client-info p{color:var(--t2);font-size:.83rem;margin-top:.2rem}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .kpi-row{grid-template-columns:1fr 1fr}
+            .story-grid{grid-template-columns:1fr}
+            .impact-grid{grid-template-columns:1fr}
+            .feat-grid{grid-template-columns:1fr}
+            .proj-title{font-size:1.65rem}
+            nav{padding:.9rem 5%}
+            .nav-links{display:none}
+            .client-banner{flex-direction:column;align-items:flex-start}
+        }
+            background:linear-gradient(90deg,var(--accent),var(--purple))}
+    
+
+        .proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+            background:linear-gradient(90deg,#A855F7,#EC4899,var(--accent))}
+
+        /* WORKFLOW SCREENSHOT */
+        .wf-img-wrap{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:2rem;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .wf-img-wrap img{width:100%;height:auto;display:block}
+
+        /* PIPELINE STEPS */
+        .pipeline{display:flex;flex-direction:column;gap:0;margin-bottom:2rem}
+        .pipe-step{display:flex;gap:1.25rem;align-items:flex-start;position:relative}
+        .pipe-step:not(:last-child)::after{content:'';position:absolute;left:19px;top:42px;
+            width:2px;height:calc(100% + 0px);background:var(--border);z-index:0}
+        .pipe-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+            justify-content:center;font-family:var(--mono);font-size:.85rem;font-weight:700;
+            flex-shrink:0;z-index:1;border:2px solid}
+        .pipe-num.purple{background:rgba(168,85,247,.15);color:#A855F7;border-color:#A855F7}
+        .pipe-num.pink{background:rgba(236,72,153,.15);color:#EC4899;border-color:#EC4899}
+        .pipe-num.blue{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
+        .pipe-num.green{background:var(--green-dim);color:var(--green);border-color:var(--green)}
+        .pipe-num.amber{background:var(--amber-dim);color:var(--amber);border-color:var(--amber)}
+        .pipe-body{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.5rem;margin-bottom:1rem;flex:1}
+        .pipe-body h4{font-size:.95rem;font-weight:700;margin-bottom:.35rem}
+        .pipe-body p{font-size:.83rem;color:var(--t2);line-height:1.6}
+        .pipe-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem}
+        .pipe-tag{font-family:var(--mono);font-size:.68rem;background:#1E293B;
+            color:var(--t2);padding:.18rem .5rem;border-radius:4px;border:1px solid var(--border)}
+
+        /* SITES GRID */
+        .sites-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+        .site-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.35rem;text-align:center;transition:border-color .25s}
+        .site-card:hover{border-color:var(--accent)}
+        .site-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;
+            justify-content:center;margin:0 auto .75rem;font-size:1.1rem}
+        .site-card h4{font-size:.9rem;font-weight:700;margin-bottom:.3rem}
+        .site-card p{font-size:.78rem;color:var(--t2)}
+
+        /* DOWNLOAD */
+        .download-btn{display:inline-flex;align-items:center;gap:.7rem;padding:.8rem 1.6rem;
+            border-radius:8px;font-size:.9rem;font-weight:700;text-decoration:none;
+            background:linear-gradient(135deg,#A855F7,#EC4899);color:#fff;
+            transition:all .3s;box-shadow:0 4px 15px rgba(168,85,247,.25)}
+        .download-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(168,85,247,.4)}
+
+        /* N8N BADGE */
+        .n8n-badge{display:inline-flex;align-items:center;gap:.5rem;
+            background:rgba(234,100,54,.12);border:1px solid rgba(234,100,54,.3);
+            color:#EA6436;padding:.3rem .8rem;border-radius:5px;
+            font-family:var(--mono);font-size:.75rem;font-weight:600}
+
+        @media(max-width:768px){
+            .sites-grid{grid-template-columns:1fr}
+        }
+    </style>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "xgkes0h7l5");
+    </script>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-chart-network"></i> SHUBHAM GARG</a>
+    <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="index.html#projects" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Projects</a>
+    <a href="mailto:shubhamgrg33@gmail.com?subject=Reaching%20out%20%E2%80%94%20saw%20your%20portfolio" class="nav-email-btn"><i class="fa-solid fa-envelope"></i> Let's Talk</a>
+</nav>
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="proj-hero">
+        <span class="eyebrow">Case Study &nbsp;// &nbsp;N8N · Multi-Agent AI &nbsp;·&nbsp; Multi-Website Publishing &nbsp;·&nbsp; Google Sheets</span>
+        <h1 class="proj-title">Article Publisher — AI Content Engine</h1>
+        <div class="pill-row">
+            <span class="n8n-badge"><i class="fa-solid fa-diagram-project"></i> N8N · 36 Nodes</span>
+            <span class="pill"><i class="fa-solid fa-brain" style="margin-right:.35rem"></i>OpenRouter AI</span>
+            <span class="pill"><i class="fa-brands fa-wordpress" style="margin-right:.35rem"></i>WordPress API</span>
+            <span class="pill"><i class="fa-brands fa-google" style="margin-right:.35rem"></i>Google Sheets</span>
+            <span class="pill"><i class="fa-solid fa-image" style="margin-right:.35rem"></i>Auto Image Processing</span>
+            <span class="pill green">✦ Multi-Agent AI</span>
+            <span class="pill green">✦ Multi-Website</span>
+            <span class="pill green">3 Sites · 1 Workflow</span>
+            <span class="pill green">100% Automated Publishing</span>
+            <span class="pill amber">Live Production · 36 Nodes</span>
+            <span class="pill"><i class="fa-brands fa-google" style="margin-right:.35rem"></i>Google Sheets Data Management</span>
+        </div>
+        <p class="proj-summary">A single N8N workflow powered by <strong style="color:var(--accent)">Multi-Agent AI</strong> that runs like an entire content team. Keywords and target sites are managed in <strong style="color:var(--accent)">Google Sheets</strong> — the workflow picks them up, researches using Wikipedia &amp; Google Search, writes full SEO articles, finds and processes images, adds internal links, and publishes across <strong style="color:var(--accent)">3 different WordPress sites</strong> automatically. One workflow. Multiple AI agents. Multiple websites. Zero manual steps.</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+        <div class="kpi purple"><div class="kpi-val">36</div><div class="kpi-label">N8N Nodes in Pipeline</div></div>
+        <div class="kpi green"><div class="kpi-val">3</div><div class="kpi-label">WordPress Sites Managed</div></div>
+        <div class="kpi blue"><div class="kpi-val">100%</div><div class="kpi-label">Automated Publishing</div></div>
+        <div class="kpi amber"><div class="kpi-val">0</div><div class="kpi-label">Manual Steps Required</div></div>
+    </div>
+
+    <!-- WORKFLOW SCREENSHOT -->
+    <div class="wf-img-wrap">
+        <div class="frame-bar top">
+            <span><span class="fdot" style="background:#A855F7"></span>Live Workflow — Article Publisher · 36 Node Pipeline</span>
+            <span>N8N &nbsp;·&nbsp; OpenRouter AI &nbsp;·&nbsp; WordPress REST API</span>
+        </div>
+        <img src="assets/1man-army-workflow.png" alt="1 Man Army N8N Workflow Screenshot">
+        <div class="frame-bar bottom">
+            <span><i class="fa-solid fa-shield-halved" style="color:var(--green);margin-right:.4rem"></i>Production workflow — keywords, content, images & publishing fully automated</span>
+            <span>36 Nodes &nbsp;·&nbsp; Active</span>
+        </div>
+    </div>
+
+    <!-- 3 WEBSITES -->
+    <div class="sec">
+        <div class="sec-label">Target Sites</div>
+        <div class="sec-title">Multi-Website Publishing — One Workflow, 3 WordPress Sites</div>
+        <div class="sec-sub">The Switch node detects the target website from Google Sheets and routes everything — article, image upload, and feature image — to the correct WordPress instance automatically.</div>
+    </div>
+
+    <div class="sites-grid">
+        <div class="site-card">
+            <div class="site-icon" style="background:rgba(239,68,68,.1);color:var(--red)"><i class="fa-solid fa-tv"></i></div>
+            <h4>Site A</h4>
+            <p>Entertainment news site — movies, celebrities, OTT releases & trending internet culture</p>
+        </div>
+        <div class="site-card">
+            <div class="site-icon" style="background:rgba(56,189,248,.1);color:var(--accent)"><i class="fa-solid fa-futbol"></i></div>
+            <h4>Site B</h4>
+            <p>Sports & crossover content site — routed separately with its own WordPress credentials</p>
+        </div>
+        <div class="site-card">
+            <div class="site-icon" style="background:rgba(34,197,94,.1);color:var(--green)"><i class="fa-solid fa-chart-line"></i></div>
+            <h4>Site C</h4>
+            <p>Finance & investment content site — articles auto-published with relevant imagery</p>
+        </div>
+    </div>
+
+    <!-- STORY -->
+    <div class="sec">
+        <div class="sec-label">The Full Story</div>
+        <div class="sec-title">Problem → Solution → Real Business Impact</div>
+        <div class="sec-sub">What was broken, what I built, and what changed after this went live.</div>
+    </div>
+
+    <div class="story-grid">
+        <div class="story-card problem">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>What Was Draining Time Every Day</h3>
+            </div>
+            <p class="story-intro">Running 3 WordPress content sites manually is a full team's job — keyword research, writing, SEO, image sourcing, internal linking, and publishing — repeated daily across 3 different platforms. Completely unscalable for one person.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Writing Articles Manually for 3 Sites</strong>
+                        <p>Each article needed research, writing, SEO structuring, and formatting — multiplied across 3 websites with different audiences and niches. Hours of work per day, per site.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Image Sourcing & Uploading Was Manual</strong>
+                        <p>Finding relevant images, downloading them, resizing, and uploading to WordPress with the right feature image settings — repeated for every article, every day.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Internal Linking Was Always Skipped</strong>
+                        <p>Manually adding internal links to relevant posts on each site requires knowing the existing content library deeply — impossible to do consistently at scale.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Publishing to 3 Different Platforms</strong>
+                        <p>Each site has different WordPress credentials, categories, and settings. Managing all three manually meant constant context-switching and human error.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="story-card solution">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3>What I Built — The 1 Man Army</h3>
+            </div>
+            <p class="story-intro">I built a 36-node N8N workflow that acts as a full content team — from keyword input to published article with feature image and internal links — across all 3 websites simultaneously.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>AI Article Writer Agent (Wikipedia + Google Search)</strong>
+                        <p>An OpenRouter-powered AI agent writes full SEO articles using the keyword from Sheets — researching via Wikipedia and Google Search, finding YouTube trailers, and structuring the content with proper SEO titles.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>AI Internal Linking Agent</strong>
+                        <p>A second AI agent scans the correct WordPress site's existing posts and inserts relevant internal links naturally into the article — with external links from trusted sources via Google Search.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Auto Image Fetch, Edit & Upload</strong>
+                        <p>The workflow fetches a relevant image, processes it using the Edit Image node, uploads it to the correct WordPress media library, and sets it as the feature image — all automatically.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Smart Routing to 3 WordPress Sites</strong>
+                        <p>A Switch node reads the target website from Google Sheets and routes the entire pipeline — article, image, and publishing — to the correct WordPress site with zero manual intervention.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- STEP BY STEP PIPELINE -->
+    <div class="sec">
+        <div class="sec-label">Pipeline Breakdown</div>
+        <div class="sec-title">How the 36-Node Workflow Runs — Step by Step</div>
+        <div class="sec-sub">Every stage of the automation from keyword input to published article.</div>
+    </div>
+
+    <div class="pipeline">
+        <div class="pipe-step">
+            <div class="pipe-num purple">1</div>
+            <div class="pipe-body">
+                <h4>Trigger — Schedule or Webhook or Manual</h4>
+                <p>The workflow supports 3 trigger modes: runs automatically on a schedule, fires via Webhook from an external source, or runs manually. Fully flexible for any use case.</p>
+                <div class="pipe-tags"><span class="pipe-tag">Schedule Trigger</span><span class="pipe-tag">Webhook</span><span class="pipe-tag">Manual Trigger</span></div>
+            </div>
+        </div>
+        <div class="pipe-step">
+            <div class="pipe-num purple">2</div>
+            <div class="pipe-body">
+                <h4>Read Keywords from Google Sheets <span style="background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.25);color:var(--accent);font-family:var(--mono);font-size:.68rem;padding:.15rem .45rem;border-radius:4px;margin-left:.4rem;font-weight:600">Data Hub</span></h4>
+                <p>All data lives in <strong style="color:var(--t1)">Google Sheets</strong> — keywords, target websites, and publish status are managed in one central sheet. The workflow reads keywords, identifies the target website (Site A / Site B / Site C), and marks rows as processed after publishing. Google Sheets acts as the full data management layer.</p>
+                <div class="pipe-tags"><span class="pipe-tag">Google Sheets</span><span class="pipe-tag">Limit Node</span></div>
+            </div>
+        </div>
+        <div class="pipe-step">
+            <div class="pipe-num pink">3</div>
+            <div class="pipe-body">
+                <h4>AI Article Writer Agent <span style="background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);color:#A855F7;font-family:var(--mono);font-size:.68rem;padding:.15rem .45rem;border-radius:4px;margin-left:.4rem;font-weight:600">Agent 1</span></h4>
+                <p>An OpenRouter-powered AI agent writes a full SEO article as a senior entertainment/finance journalist — using Wikipedia for background research, Google Search for facts & YouTube trailer URLs, and outputting a structured JSON with seo_title, article body, and youtube_trailer_embed_url.</p>
+                <div class="pipe-tags"><span class="pipe-tag">OpenRouter AI</span><span class="pipe-tag">Wikipedia Tool</span><span class="pipe-tag">Google Search Tool</span><span class="pipe-tag">Structured Output</span></div>
+            </div>
+        </div>
+        <div class="pipe-step">
+            <div class="pipe-num pink">4</div>
+            <div class="pipe-body">
+                <h4>AI Internal Linking Agent <span style="background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.3);color:#EC4899;font-family:var(--mono);font-size:.68rem;padding:.15rem .45rem;border-radius:4px;margin-left:.4rem;font-weight:600">Agent 2</span></h4>
+                <p>A second AI agent takes the written article, calls the correct WordPress tool to fetch existing posts, and inserts relevant internal links naturally — plus external links from trusted sources via Google Search. Strictly no rewriting, only linking.</p>
+                <div class="pipe-tags"><span class="pipe-tag">OpenRouter AI</span><span class="pipe-tag">WordPress Tool</span><span class="pipe-tag">Google Search Tool</span><span class="pipe-tag">LangChain Agent</span></div>
+            </div>
+        </div>
+        <div class="pipe-step">
+            <div class="pipe-num blue">5</div>
+            <div class="pipe-body">
+                <h4>Image Fetch, Process & Sort</h4>
+                <p>Fetches a relevant image via Google Image search, downloads it using HTTP Request, processes and edits it using the Edit Image node, then sorts and prepares it for upload.</p>
+                <div class="pipe-tags"><span class="pipe-tag">HTTP Request</span><span class="pipe-tag">Edit Image</span><span class="pipe-tag">Sort Node</span><span class="pipe-tag">Code Node</span></div>
+            </div>
+        </div>
+        <div class="pipe-step">
+            <div class="pipe-num blue">6</div>
+            <div class="pipe-body">
+                <h4>Loop & Smart Site Switch</h4>
+                <p>A Loop node processes items in batches. A Switch node reads the target website from Sheets and routes everything — article and image — to the correct WordPress branch (Site A / Site B / Site C).</p>
+                <div class="pipe-tags"><span class="pipe-tag">Loop Node</span><span class="pipe-tag">Switch Node</span><span class="pipe-tag">No Operation</span></div>
+            </div>
+        </div>
+        <div class="pipe-step">
+            <div class="pipe-num green">7</div>
+            <div class="pipe-body">
+                <h4>Upload Image & Set as Feature Image</h4>
+                <p>Uploads the processed image to the correct WordPress media library via HTTP Request, then sets it as the feature image on the published post — separately for each of the 3 sites.</p>
+                <div class="pipe-tags"><span class="pipe-tag">Upload Img to Site A WP</span><span class="pipe-tag">Upload Img to Site B WP</span><span class="pipe-tag">Upload Img to Site C WP</span></div>
+            </div>
+        </div>
+        <div class="pipe-step">
+            <div class="pipe-num green">8</div>
+            <div class="pipe-body">
+                <h4>Publish Article to WordPress & Update Sheets</h4>
+                <p>Publishes the final article (with feature image, SEO title, internal links, and YouTube embed) as a draft or live post on the correct WordPress site. Updates the Google Sheet row to mark the keyword as processed.</p>
+                <div class="pipe-tags"><span class="pipe-tag">WordPress Site A</span><span class="pipe-tag">WordPress Site B</span><span class="pipe-tag">WordPress Site C</span><span class="pipe-tag">Update Draft</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPACT -->
+    <div class="impact-wrap">
+        <div class="sec-label">Real Business Impact</div>
+        <div class="sec-title">What Actually Changed After Going Live</div>
+        <p class="sec-sub" style="margin-bottom:0">Concrete improvements from replacing a manual content team with a single automated pipeline.</p>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <i class="fa-solid fa-bolt"></i>
+                <h4>One Person Runs 3 Content Sites</h4>
+                <p>What previously needed a writer, SEO specialist, image editor, and publisher for each site now runs entirely through one workflow — managed by one person.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-link"></i>
+                <h4>Internal Linking at Scale</h4>
+                <p>Every article gets relevant internal links added automatically by an AI agent that reads the actual site content — something manually impossible to do consistently.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-image"></i>
+                <h4>Images Sourced, Edited & Uploaded Automatically</h4>
+                <p>No more manually finding, downloading, resizing, and uploading images. The pipeline handles the full image workflow for every article on every site.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-diagram-project"></i>
+                <h4>Zero Context Switching Between Sites</h4>
+                <p>The Switch node handles all routing logic — same workflow, same trigger, three completely separate publishing destinations with their own credentials and settings.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                <h4>Research-Backed SEO Content Every Time</h4>
+                <p>Every article is backed by real Wikipedia data and Google Search results — not hallucinated. Facts are verified, dates confirmed, and sources cited automatically.</p>
+            </div>
+            <div class="impact-card">
+                <i class="fa-solid fa-clock"></i>
+                <h4>Hours of Daily Work Eliminated</h4>
+                <p>Writing, researching, linking, image processing, and publishing across 3 sites — tasks that consumed an entire workday — now run in minutes with zero intervention.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOWNLOAD -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:2rem;margin-top:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem">
+        <div>
+            <p style="font-family:var(--mono);font-size:.72rem;color:#A855F7;text-transform:uppercase;letter-spacing:2px;margin-bottom:.5rem">N8N Workflow File</p>
+            <h3 style="font-size:1.05rem;margin-bottom:.4rem">Download the Full Article Publisher Workflow JSON</h3>
+            <p style="color:var(--t2);font-size:.88rem;max-width:520px">The complete N8N workflow used in production. Import it directly into your N8N instance — all 36 nodes, AI agent prompts, routing logic, and WordPress connections included.</p>
+        </div>
+        <a href="1_Man_army.json" download class="download-btn">
+            <i class="fa-solid fa-arrow-down-to-line"></i> Download N8N Workflow (.json)
+        </a>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="sec" style="margin-top:2rem">
+        <div class="sec-label">Technical Breakdown</div>
+        <div class="sec-title">Key Nodes & What They Do</div>
+        <div class="sec-sub">The most important nodes inside this 36-node pipeline.</div>
+    </div>
+    <div class="feat-grid">
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.25);color:#A855F7"><i class="fa-solid fa-robot"></i></div><div><h4>Article Writer AI Agent</h4><p>OpenRouter-powered LangChain agent writing full SEO articles with structured output (seo_title, article, youtube_trailer_embed_url) per keyword.</p></div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(236,72,153,.1);border-color:rgba(236,72,153,.25);color:#EC4899"><i class="fa-solid fa-link"></i></div><div><h4>Internal Linking Agent</h4><p>Second AI agent that reads existing WordPress posts and inserts natural internal + external links without rewriting or changing the article structure.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-brands fa-wikipedia-w"></i></div><div><h4>Wikipedia + Google Search Tools</h4><p>Built-in research tools that the AI agents use to verify facts, find dates, confirm quotes, and locate YouTube trailer URLs before writing.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-code-branch"></i></div><div><h4>Switch Node — Smart Routing</h4><p>Reads the target website from Google Sheets and routes the full pipeline to the correct WordPress branch — Site A, Site B, or Site C.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-image"></i></div><div><h4>Edit Image Node</h4><p>Automatically processes and edits the fetched image before uploading — resizing, cropping, or formatting as needed for WordPress feature images.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-brands fa-wordpress"></i></div><div><h4>WordPress REST API Publishing</h4><p>Publishes articles with feature images, SEO titles, and embedded YouTube trailers to 3 separate WordPress sites using individual API credentials per site.</p></div></div>
+    </div>
+
+</div>
+</body>
+</html>

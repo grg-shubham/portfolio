@@ -1,0 +1,1439 @@
+{
+  "name": "1 Man army",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        832
+      ],
+      "id": "57d89468-159f-4ec3-a821-b75fa7ab9365",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 10,
+        "options": {
+          "search": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', `Use this to find post for Internal Linking`, 'string') }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpressTool",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        880
+      ],
+      "id": "5920c817-d178-4c25-9c19-ffc29c7556b9",
+      "name": "Invest Record",
+      "credentials": {
+        "wordpressApi": {
+          "id": "jEhudcFDK4vh2385",
+          "name": "WP Investrecords.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 10,
+        "options": {
+          "search": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', `Use this to find post for Internal Linking`, 'string') }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpressTool",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        880
+      ],
+      "id": "e1f0dbdd-f83e-4f62-85f4-c38ec1fa7624",
+      "name": "Crossover 99",
+      "credentials": {
+        "wordpressApi": {
+          "id": "mqipjTbsf45QKtly",
+          "name": "WP Crossover 99"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 10,
+        "options": {
+          "search": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search', `Use this to find post for Internal Linking`, 'string') }}",
+          "status": "publish"
+        }
+      },
+      "type": "n8n-nodes-base.wordpressTool",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        880
+      ],
+      "id": "e3d5da69-2915-405a-9895-d80db2fd580b",
+      "name": "TNB",
+      "credentials": {
+        "wordpressApi": {
+          "id": "ypFnOgb3fFGb49Zy",
+          "name": "WP TNB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"youtube_trailer_embed_url\": \"...\",\n  \"seo_title\": \"...\",\n  \"article\": \"...\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        880
+      ],
+      "id": "859d2c1a-b99d-4c27-a4bd-19538e8c4e10",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        256,
+        656
+      ],
+      "id": "a75644d1-6cea-49de-9615-8c45f10bc2d7",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "operation": "resize",
+        "width": 1200,
+        "height": 675,
+        "resizeOption": "ignoreAspectRatio",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        2816,
+        720
+      ],
+      "id": "c23756cb-dec1-4ce2-a3e7-53d2bd92efea",
+      "name": "Edit Image",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "imageWidth",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        2144,
+        656
+      ],
+      "id": "7776b7d6-1d4c-4625-b725-3f51f498eb89",
+      "name": "Sort"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2592,
+        544
+      ],
+      "id": "589ea4bc-0580-47a5-9bf6-473fb342bf13",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('AI Agent (Internal Linking)').item.json.output.seo_title }}",
+        "additionalFields": {
+          "authorId": 69,
+          "content": "={{ $('AI Agent (Internal Linking)').item.json.output.article }}",
+          "categories": []
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        3504,
+        656
+      ],
+      "id": "8c6c66e8-0ca2-4f52-84b3-61720dbabf91",
+      "name": "Cross99",
+      "credentials": {
+        "wordpressApi": {
+          "id": "mqipjTbsf45QKtly",
+          "name": "WP Crossover 99"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('AI Agent (Internal Linking)').item.json.output.seo_title }}",
+        "additionalFields": {
+          "authorId": 66,
+          "content": "={{ $('AI Agent (Internal Linking)').item.json.output.article }}",
+          "categories": [
+            144
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        3504,
+        848
+      ],
+      "id": "e5e0d2af-8c0c-4d2a-b7c2-68e4799a3999",
+      "name": "Invest",
+      "credentials": {
+        "wordpressApi": {
+          "id": "jEhudcFDK4vh2385",
+          "name": "WP Investrecords.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## I'm a note \n**Prompts**  [Google Docs](https://docs.google.com/document/d/1Tg1CQNWqeiPFeFl5vfY-aSKYCde5YfOqcFB0hgQCQsg)",
+        "height": 96,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        32,
+        480
+      ],
+      "id": "8fd0bd1d-7334-4e4c-b53e-97a06160494d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# ROLE\n\nYou are a Linking Agent for entertainment articles.\n\nYour responsibilities:\n- Insert internal links following the internal linking rules below.\n- Insert external links for famous platforms and celebrities naturally.\n\nYou are STRICTLY NOT allowed to:\n- Rewrite the article\n- Change tone\n- Change structure\n- Modify meaning\n- Generate links manually\n- Guess URLs\n- Create fake links\n- Over-optimize anchor text\n- Force links into unrelated sentences\n\n\n---\n\n# SITE CONTEXT\n\nThe site for this blog post is:\n\n{{ $('Limit1').item.json.Website }}\n\nYou MUST detect this value first and then follow the correct WordPress tool rule below.\n\n\n---\n\n# TOOL RULE (Internal Links)\n\nIf site = TNB → Call ONLY the TNB WordPress tool  \nIf site = Invest Record → Call ONLY the Invest Record WordPress tool  \nIf site = Crossover 99 → Call ONLY the Crossover 99 WordPress tool  \n\nYou MUST call the correct WordPress tool BEFORE inserting any internal links.\n\nDo NOT skip the tool call.\nDo NOT manually create internal URLs.\n\nUse 'google_search' tool to find the externa link from trusted source\n\n\n---\n\n# INTERNAL LINKING TASK\n\n## Step 1 — Fetch Posts\nUsing the correct WordPress tool, fetch published posts relevant to:\n- Main topic\n- Important keywords\n- Entity names\n- Related subjects\n\nOnly consider published posts.\n\n## Step 2 — Select Posts\nSelect the most contextually relevant 3–5 posts maximum.\n\n## Step 3 — Insert Links\nInsert internal links naturally into existing sentences.\n\nRules:\n- Do NOT force links\n- Do NOT modify sentence meaning\n- Do NOT insert unrelated links\n- Do NOT change article wording except to wrap anchor text\n\nAnchor Text Rules:\n- Use rel=\"noopener\" tag for Internal links\n- Must be natural and contextually relevant\n- Must not be keyword-stuffed\n- Must match existing words already in the sentence\n- Maximum 3 internal links total\n- Do NOT link homepage\n- Do NOT repeat the same URL\n\n\n---\n\n# EXTERNAL LINKING TASK\n\nFor external references:\n\nUse 'google_search' tool to find external link\n\n- If an OTT platform is mentioned (Netflix, Amazon Prime Video, Disney+, etc.):\n  → DO NOT link to the platform homepage.\n  → ONLY link if the article discusses a specific movie or show.\n  → In that case, link directly to the official page of that specific title on the OTT platform.\n  → If a direct title page is not available, do NOT add a link.\n\n- If a well-known celebrity is mentioned:\n  → ONLY link to their official Instagram profile or Twitter if the celebrity is a key focus of the article.\n  → Do NOT link if the celebrity is mentioned briefly or casually.\n  → The link must clearly add value for readers.\n\nExternal Link Rules:\n- Use a maximum of 3 external links.\n- Use rel=\"nofollow noopener\" tag for External links\n- Only add links that directly support the article’s title and reader intent.\n- Each link must provide meaningful additional information.\n- Do NOT add generic or irrelevant links.\n- Use the google_search tool to find official URLs.\n- Do NOT guess URLs.\n- Do NOT manually construct URLs.\n- Integrate links naturally within existing sentences.\n- Do NOT break sentence flow.\n- Do NOT add new sentences only to insert links.\n\n---\n\n# OUTPUT REQUIREMENTS\n\n- Fully original\n- Keep tone, style, and structure exactly as provided\n- Structured in proper HTML formatting\n- Ready to post on WordPress\n- Internal and external links must be properly embedded\n- Do NOT mention word count\n- Do NOT explain anything\n- Do NOT add one link multiple times\n- Do NOT list links separately\n- Return only the modified article\n\n\n---\n\n# OUTPUT FORMAT (STRICT)\n\nYou MUST return ONLY valid raw JSON.\n\nDo NOT:\n- Do NOT: Add explanations\n- Do NOT: Add text before JSON\n- Do NOT: Add text after JSON\n- Do NOT: Use same link 2 times\n- Do NOT: Wrap JSON in markdown code blocks\n- Do NOT: Add extra fields\n- Do NOT: Add the word count on final article\n\nReturn strictly:\n\n{\n  \"seo_title\": \"string\",\n  \"article\": \"string\"\n}\n\n\nIf your response is not valid JSON, the system will fail. Double-check formatting.\n\n\n---\n\n# INPUT ARTICLE\n\nTitle:\n{{ $json.output.seo_title }}\n\nContent:\n{{ $json.output.article }}\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1232,
+        656
+      ],
+      "id": "1f548b78-278b-4fe2-8a34-1ec00fd66ccf",
+      "name": "AI Agent (Internal Linking)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://google.serper.dev/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "1b582b24b935616ce7ef2cbd5b22d5ffeec0542b"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `Use for what you want to search on google`, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [
+        1552,
+        880
+      ],
+      "id": "6f02d499-f88c-4224-9391-4477fb41e0d9",
+      "name": "google_search2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -288,
+        656
+      ],
+      "id": "1ecf9e09-980d-4891-9e4d-7f52cd9610ae",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# ROLE\n\nYou are a senior entertainment journalist and SEO expert for Entertainment websites — a platform known for immersive, emotional, story-style coverage of trending news, movies, celebrity drama, OTT releases, and internet culture.\n\nYour job is to write a compelling, narrative-driven SEO article using the keyword (for wordpress):\n\n**Primary SEO Keyword:** {{ $json.Keywords }}\n\n# AVAILABLE TOOLS\n\n1. wikipedia\n2. google_search\n\n---\n\n# TOOL USAGE RULES (MANDATORY)\n\n• Always attempt wikipedia first for background information.\n• If wikipedia is incomplete, outdated, or missing details — use google_search.\n• Use google_search to:\n   - Verify facts\n   - Confirm dates, statistics, quotes\n   - Find recent developments\n   - Cross-check controversial claims\n   - Find official sources\n   - Find YouTube trailer URL (if applicable)\n\n\n• Use google_search to \n   - find the official YouTube trailer.\n   - Return the direct YouTube watch URL\n   - Convert it into embeddable format:\n     https://www.youtube.com/embed/VIDEO_ID\n   - If no official trailer exists, return: null\n  - ENSURE the youtube URL is official not thrird party or unoffical URL's\n\n---\n\n# FACT-CHECKING RULES (CRITICAL)\n\n• Never present rumors as confirmed facts.\n• If something is speculation, clearly state:\n   - \"Reports suggest...\"\n   - \"According to sources...\"\n   - \"Unconfirmed reports indicate...\"\n• If information cannot be verified, explicitly say so.\n• Cross-verify major claims using google_search.\n\nAccuracy is mandatory.\n\n---\n\n# RESEARCH PROCESS\n\nStep 1: Gather foundational data from wikipedia.\nStep 2: Expand and verify using google_search.\nStep 3: Use google_search to find official YouTube trailer URL.\nStep 4: Cross-check important claims.\nStep 5: Write structured SEO article.\n\n---\n\n# WRITING STYLE REQUIREMENTS\n\n- Open with a gripping, cinematic introduction.\n- Create mood, tension, and intrigue (like a thriller opening).\n- Use storytelling elements: drama, character arcs, fandom reactions, speculation, past controversies.\n- Integrate quotes, fan reactions, or community buzz naturally.\n- Make readers feel like the story is unfolding.\n\n# WRITING INSTRUCTIONS\n\n1. The first 2–3 lines must be highly engaging and informative.\n   - Hook the reader immediately.\n   - Create curiosity or emotional connection.\n   - Prevent bounce rate by clearly signaling value.\n\n2. The primary keyword must be naturally included in the first paragraph.\n   - Ensure the paragraph fulfills the search intent behind the keyword.\n   - Do not stuff the keyword.\n\n3. Maintain clean formatting:\n   - Add a line break after every 3–4 lines.\n   - Keep paragraphs short and readable.\n\n4. Bold important phrases, key insights, or critical information.\n   - Use <strong> tag to bold the important word don't use the double asterisk (**)\n   - Do not overuse bold formatting.\n   - Only highlight meaningful points.\n   - Don't do over Bold make it natural\n\n5. Keep the tone natural, human, and conversational.\n   - Avoid robotic phrasing.\n   - Avoid repetition.\n\n\nAvoid dry information dumping.\n\n# IMPORTANT (DON'T DO):\n- Mention the Word Count in any part of final article for wordpress.\n- Don't mention the double asterisk ** in article for bold the text because it is for wordpress don't give the markdown formating.\n\n---\n\n# STRUCTURE REQUIREMENTS\n\n## 1. Title\n- Must include the exact keyword: {{ $json.Keywords }}\n- Make it emotional and curiosity-driven.\n\n## 2. Introduction\n- Article should be start from <p> \n- Don't use \"Introduction\" word\n- Don't use any heading on start article\n- Dramatic, immersive.\n- No release date here.\n\n## 3. Release Date: {{ $json.Keywords }}\n- Clearly state confirmed release details.\n- If delayed, explain why.\n- If unconfirmed, clarify speculation vs fact.\n\n## 4. Additional Sections (Use H2)\nPossible sections:\n- Cast & Characters\n- Plot Breakdown\n- Behind-the-Scenes Drama\n- Controversies or Production Delays\n- Fan Theories & Internet Buzz\n- What the Director Has Said\n- Platform & Streaming Details\n\n\n### Follw these instruction \n- Every Additional Sections should has minimum 200 words explaination (don't mention the word count in article)\n- Use engaging subheadings.\n- Use next line every 3 or 4 lines for better readability for reader\n\n---\n\n# SEO REQUIREMENTS\n\n- Use the keyword {{ $json.Keywords }} naturally at least 3–4 times in 800+ words.\n- Maintain readability and flow.\n- Avoid keyword stuffing.\n\n---\n\n# EMBEDDED MEDIA\n\n- Embed the official trailer using a YouTube embed with iframe tag for wordpress (if available).\n- Insert social media reactions (tweets, Reddit buzz, Instagram reactions) organically within sections — NOT as a separate block.\n- Do NOT hyperlink external sources (except trailer).\n\n\n\n---\n# Conclution\nGive conclusion at last and short emotional CTA in 80 Words (don't mention the word count in article)\n\n\"Do you think the kids were taken… or did they go willingly? Drop your theories below.\"\n\n\n\n\nENDING\n\n\n---\n\n# OUTPUT REQUIREMENT\n\n- Minimum 900 words.(don't mention the word count in article)\n- Fully original.\n- Emotionally engaging.\n- Structured with proper HTML formatting (heading, points, bold) ready to post on Wordpress.\n- Don't use markdown formatting in final article because it's not suitable for my wordpress.\n- Don't add any word, sentence or paragraph in final output which is no need to publish on wordpress\n\n\n\n## Output\n{\n  \"youtube_trailer_embed_url\": \"https://www.youtube.com/embed/VIDEO_ID or null\",\n  \"seo_title\": \"\",\n  \"article\": \"\"\n}\n\n\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        592,
+        656
+      ],
+      "id": "c2d90ffb-b167-47d1-ab76-074c584486dd",
+      "name": "Article Writer"
+    },
+    {
+      "parameters": {
+        "model": "x-ai/grok-4.1-fast",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        464,
+        880
+      ],
+      "id": "b10b9269-780e-4dfb-96b8-4507e438836c",
+      "name": "Brain 🧠",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "openRouterApi": {
+          "id": "v4Ad3KslJdTbRhiZ",
+          "name": "OpenRouter Testing Key"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        640,
+        880
+      ],
+      "id": "9150a77a-56bd-4e96-87b4-8af9b9ac9167",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://google.serper.dev/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "1b582b24b935616ce7ef2cbd5b22d5ffeec0542b"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `Use for what you want to search`, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [
+        752,
+        880
+      ],
+      "id": "c5c70358-d140-40c4-a03b-9ff62e419b50",
+      "name": "google_search"
+    },
+    {
+      "parameters": {
+        "model": "x-ai/grok-4.1-fast",
+        "options": {
+          "temperature": 0.8
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        880
+      ],
+      "id": "574ccdb2-2de9-4fe7-81b8-2068701621c7",
+      "name": "Brain 🧠1",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "openRouterApi": {
+          "id": "v4Ad3KslJdTbRhiZ",
+          "name": "OpenRouter Testing Key"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"seo_title\": \"...\",\n  \"article\": \"...\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1712,
+        880
+      ],
+      "id": "31195cfa-b1ab-434a-b6a4-4e631078d527",
+      "name": "Structured Output"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://google.serper.dev/images",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "1b582b24b935616ce7ef2cbd5b22d5ffeec0542b"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $('Limit1').item.json.Keywords }} images"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1696,
+        656
+      ],
+      "id": "8f3f639f-3a5e-48f0-8251-64fa0f9cc7e2",
+      "name": "Google Image"
+    },
+    {
+      "parameters": {
+        "jsCode": "const images = items[0].json.images;\n\nreturn images.map(img => {\n  return {\n    json: {\n      position: img.position,\n      title: img.title,\n      image_url: img.imageUrl,\n      imageWidth: img.imageWidth,\n      imageHeight: img.imageHeight\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        656
+      ],
+      "id": "d0e239f6-ce33-4bb5-b0d1-2430c25546bc",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2368,
+        656
+      ],
+      "id": "c057ef1c-7eeb-4120-a015-8d7ce65b727a",
+      "name": "Loop"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.image_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2592,
+        736
+      ],
+      "id": "7d7d2573-1998-4555-b633-a3d66efbb5fa",
+      "name": "GET Image",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Limit1').item.json.Website }}",
+                    "rightValue": "=TNB",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "4917f3e3-a9a9-498f-a737-18659679e766"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TNB"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0dfb6f84-a0eb-4c4b-987d-b02afe362735",
+                    "leftValue": "={{ $('Limit1').item.json.Website }}",
+                    "rightValue": "Crossover99",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Cross99"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "bfd45cd8-73ae-4f00-af5c-fb22838ce2f6",
+                    "leftValue": "={{ $('Limit1').item.json.Website }}",
+                    "rightValue": "InvestRecords",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Invest"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        3056,
+        640
+      ],
+      "id": "1f99e66c-edc9-4eef-8e46-9d058a5aa769",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://trendingnewsbuzz.com//wp-json/wp/v2/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-disposition",
+              "value": "=attachment;filename= {{ $binary.data.fileName.replace(/\\.[^/.]+$/, \"\") }}.jpg"
+            },
+            {
+              "name": "content-type",
+              "value": "={{ $binary.data.mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3280,
+        464
+      ],
+      "id": "09c2b24a-7d83-40f1-81c7-ef4ae703d3b4",
+      "name": "Upload Img to TNB WP",
+      "executeOnce": true,
+      "credentials": {
+        "wordpressApi": {
+          "id": "ypFnOgb3fFGb49Zy",
+          "name": "WP TNB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crossover99.com//wp-json/wp/v2/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-disposition",
+              "value": "=attachment;filename= {{ $binary.data.fileName.replace(/\\.[^/.]+$/, \"\") }}.jpg"
+            },
+            {
+              "name": "content-type",
+              "value": "={{ $binary.data.mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3280,
+        656
+      ],
+      "id": "6d751d2d-691d-4f8d-a1bc-0c975a1e153a",
+      "name": "Upload Img to C99 WP",
+      "executeOnce": true,
+      "credentials": {
+        "wordpressApi": {
+          "id": "mqipjTbsf45QKtly",
+          "name": "WP Crossover 99"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://investrecords.com//wp-json/wp/v2/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-disposition",
+              "value": "=attachment;filename= {{ $binary.data.fileName.replace(/\\.[^/.]+$/, \"\") }}.jpg"
+            },
+            {
+              "name": "content-type",
+              "value": "={{ $binary.data.mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3280,
+        848
+      ],
+      "id": "383cb24a-f25e-47ed-abb4-95823efc7785",
+      "name": "Upload Img to Invest WP",
+      "executeOnce": true,
+      "credentials": {
+        "wordpressApi": {
+          "id": "jEhudcFDK4vh2385",
+          "name": "WP Investrecords.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://trendingnewsbuzz.com/wp-json/wp/v2/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "featured_media",
+              "value": "={{ $('Upload Img to TNB WP').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3728,
+        464
+      ],
+      "id": "17101cbc-dbe6-4d3c-b2d9-bcc623b114db",
+      "name": "Update Feature TNB",
+      "credentials": {
+        "wordpressApi": {
+          "id": "ypFnOgb3fFGb49Zy",
+          "name": "WP TNB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://crossover99.com/wp-json/wp/v2/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "featured_media",
+              "value": "={{ $('Upload Img to C99 WP').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3728,
+        656
+      ],
+      "id": "8121c17b-9f8e-43db-80ea-ff751eae8256",
+      "name": "Update Feature C99",
+      "credentials": {
+        "wordpressApi": {
+          "id": "mqipjTbsf45QKtly",
+          "name": "WP Crossover 99"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://investrecords.com/wp-json/wp/v2/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "featured_media",
+              "value": "={{ $('Upload Img to Invest WP').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3728,
+        848
+      ],
+      "id": "e92d45bb-9f86-41b6-b88d-20ca5b36cbf2",
+      "name": "Update Feature Invest",
+      "credentials": {
+        "wordpressApi": {
+          "id": "jEhudcFDK4vh2385",
+          "name": "WP Investrecords.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('AI Agent (Internal Linking)').item.json.output.seo_title }}",
+        "additionalFields": {
+          "authorId": 121,
+          "content": "={{ $('AI Agent (Internal Linking)').item.json.output.article }}",
+          "categories": [
+            72000
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        3504,
+        464
+      ],
+      "id": "9096077d-612e-4fc7-b8bd-19cb47b49ab1",
+      "name": "TNB.",
+      "credentials": {
+        "wordpressApi": {
+          "id": "ypFnOgb3fFGb49Zy",
+          "name": "WP TNB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1VxPYDNvBskaxrOgngou0mDDRQhsA1qfp0KRkMV22RBs",
+          "mode": "list",
+          "cachedResultName": "N8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VxPYDNvBskaxrOgngou0mDDRQhsA1qfp0KRkMV22RBs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1870159337,
+          "mode": "list",
+          "cachedResultName": "Keywords",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VxPYDNvBskaxrOgngou0mDDRQhsA1qfp0KRkMV22RBs/edit#gid=1870159337"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Pending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        32,
+        656
+      ],
+      "id": "ae312c00-2737-4330-a00f-986c0f38aa07",
+      "name": "Get Keywords",
+      "credentials": {
+        "googleApi": {
+          "id": "gLgJ7G0Yvh27paYT",
+          "name": "Data-analyst Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1VxPYDNvBskaxrOgngou0mDDRQhsA1qfp0KRkMV22RBs",
+          "mode": "list",
+          "cachedResultName": "N8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VxPYDNvBskaxrOgngou0mDDRQhsA1qfp0KRkMV22RBs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1870159337,
+          "mode": "list",
+          "cachedResultName": "Keywords",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VxPYDNvBskaxrOgngou0mDDRQhsA1qfp0KRkMV22RBs/edit#gid=1870159337"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Limit1').item.json.row_number }}",
+            "Status": "Drafted by n8n",
+            "Link": "={{ $json.link }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3952,
+        656
+      ],
+      "id": "1756abd5-48a8-415d-a069-554fad9717d8",
+      "name": "Update Draft",
+      "credentials": {
+        "googleApi": {
+          "id": "gLgJ7G0Yvh27paYT",
+          "name": "Data-analyst Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "0dcb4f94-3dbe-43c3-9274-375547cdd7bb",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -288,
+        496
+      ],
+      "id": "de4ec088-398f-4080-b167-a6c92866bf2c",
+      "name": "Webhook",
+      "webhookId": "0dcb4f94-3dbe-43c3-9274-375547cdd7bb"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {},
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2026-03-03T00:00:01.022+01:00",
+          "Readable date": "March 3rd 2026, 12:00:01 am",
+          "Readable time": "12:00:01 am",
+          "Day of week": "Tuesday",
+          "Year": "2026",
+          "Month": "March",
+          "Day of month": "03",
+          "Hour": "00",
+          "Minute": "00",
+          "Second": "01",
+          "Timezone": "Europe/Berlin (UTC+01:00)"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crossover 99": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent (Internal Linking)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invest Record": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent (Internal Linking)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TNB": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent (Internal Linking)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Article Writer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Article Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Image": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cross99": {
+      "main": [
+        [
+          {
+            "node": "Update Feature C99",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invest": {
+      "main": [
+        [
+          {
+            "node": "Update Feature Invest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent (Internal Linking)": {
+      "main": [
+        [
+          {
+            "node": "Google Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "google_search2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent (Internal Linking)",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Writer": {
+      "main": [
+        [
+          {
+            "node": "AI Agent (Internal Linking)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brain 🧠": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Article Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "google_search": {
+      "ai_tool": [
+        [
+          {
+            "node": "Article Writer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brain 🧠1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent (Internal Linking)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent (Internal Linking)",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ],
+      "main": [
+        []
+      ]
+    },
+    "Google Image": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GET Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET Image": {
+      "main": [
+        [
+          {
+            "node": "Edit Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Upload Img to TNB WP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload Img to C99 WP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload Img to Invest WP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Img to TNB WP": {
+      "main": [
+        [
+          {
+            "node": "TNB.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Img to C99 WP": {
+      "main": [
+        [
+          {
+            "node": "Cross99",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Img to Invest WP": {
+      "main": [
+        [
+          {
+            "node": "Invest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Feature TNB": {
+      "main": [
+        [
+          {
+            "node": "Update Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Feature C99": {
+      "main": [
+        [
+          {
+            "node": "Update Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Feature Invest": {
+      "main": [
+        [
+          {
+            "node": "Update Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TNB.": {
+      "main": [
+        [
+          {
+            "node": "Update Feature TNB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Keywords": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "63a9605e-bed9-4919-a30d-146a34fbfad2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1f1785d995b3fa32ab6b8219168659331dbe1459fee9ca0c94987e0285ae2676"
+  },
+  "id": "LgdvnembtK7-woIOv0dki",
+  "tags": []
+}
