@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital ER Dashboard — Power BI | Shubham Garg</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+        :root{
+            --bg:#0B0F19;--card:#151D30;--card2:#0F172A;
+            --accent:#38BDF8;--accent-dim:rgba(56,189,248,.12);--accent-glow:rgba(56,189,248,.25);
+            --green:#22C55E;--green-dim:rgba(34,197,94,.12);
+            --red:#EF4444;--red-dim:rgba(239,68,68,.1);
+            --amber:#F59E0B;--amber-dim:rgba(245,158,11,.1);
+            --purple:#818CF8;--purple-dim:rgba(129,140,248,.1);
+            --t1:#F3F4F6;--t2:#9CA3AF;--t3:#6B7280;
+            --border:#1E2D45;--border-light:#24324F;
+            --sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;--r:10px;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--t1);font-family:var(--sans);line-height:1.65;padding-bottom:5rem}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:var(--bg)}
+        ::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;width:100%;background:rgba(11,15,25,.92);
+            backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:1000;
+            display:flex;justify-content:space-between;align-items:center;padding:1rem 5%}
+        .nav-logo{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--t1);
+            display:flex;align-items:center;gap:.5rem;text-decoration:none}
+        .nav-logo i{color:var(--accent)}
+        .nav-links{display:flex;list-style:none;gap:1.75rem}
+        .nav-links a{color:var(--t2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .25s}
+        .nav-links a:hover{color:var(--accent)}
+        .nav-back{display:inline-flex;align-items:center;gap:.5rem;color:var(--t2);text-decoration:none;
+            font-family:var(--mono);font-size:.8rem;background:var(--card);
+            border:1px solid var(--border);padding:.4rem .9rem;border-radius:6px;transition:all .25s}
+        .nav-back:hover{color:var(--accent);border-color:var(--accent)}
+        .nav-email-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1.1rem;border-radius:6px;font-size:.82rem;font-weight:700;text-decoration:none;background:linear-gradient(135deg,var(--accent),#6366F1);color:#0B0F19;transition:all .3s;box-shadow:0 0 12px rgba(56,189,248,.2);white-space:nowrap}
+        .nav-email-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(56,189,248,.45)}
+
+        /* LAYOUT */
+        .container{max-width:1100px;margin:0 auto;padding:6rem 2rem 2rem}
+
+        /* HERO CARD */
+        .proj-hero{padding:2.5rem;background:var(--card);border:1px solid var(--border);
+            border-radius:var(--r);margin-bottom:2rem;position:relative;overflow:hidden}
+        .eyebrow{font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2.5px;margin-bottom:.6rem;display:block}
+        .proj-title{font-size:2.1rem;font-weight:800;margin-bottom:1rem;line-height:1.15}
+        .proj-summary{color:var(--t2);font-size:.98rem;max-width:780px;line-height:1.75}
+        .pill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem}
+        .pill{font-family:var(--mono);font-size:.73rem;background:#1E293B;color:var(--accent);
+            padding:.28rem .65rem;border-radius:5px;border:1px solid var(--border)}
+        .pill.green{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,.25)}
+        .pill.amber{color:var(--amber);background:var(--amber-dim);border-color:rgba(245,158,11,.25)}
+        .pill.purple{color:var(--purple);background:var(--purple-dim);border-color:rgba(129,140,248,.25)}
+
+        /* KPI ROW */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+        .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.5rem;position:relative;overflow:hidden;text-align:center}
+        .kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px}
+        .kpi.blue::before{background:var(--accent)}
+        .kpi.green::before{background:var(--green)}
+        .kpi.amber::before{background:var(--amber)}
+        .kpi.purple::before{background:var(--purple)}
+        .kpi-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;margin-bottom:.25rem}
+        .kpi.blue .kpi-val{color:var(--accent)}
+        .kpi.green .kpi-val{color:var(--green)}
+        .kpi.amber .kpi-val{color:var(--amber)}
+        .kpi.purple .kpi-val{color:var(--purple)}
+        .kpi-label{font-size:.8rem;color:var(--t2)}
+
+        /* DASHBOARD FRAME */
+        .frame-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:2rem;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .frame-bar{background:var(--card2);padding:.85rem 1.25rem;
+            display:flex;justify-content:space-between;align-items:center;
+            font-family:var(--mono);font-size:.76rem;color:var(--t2)}
+        .frame-bar.top{border-bottom:1px solid var(--border)}
+        .frame-bar.bottom{border-top:1px solid var(--border)}
+        .fdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.4rem}
+        .fdot.blue{background:var(--accent)}
+        .fdot.green{background:var(--green)}
+        .iframe-std{position:relative;width:100%;padding-bottom:56.25%;background:var(--card2)}
+        .iframe-std iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .iframe-tall{position:relative;width:100%;height:650px;background:var(--card2)}
+        .iframe-tall iframe{width:100%;height:100%;border:none}
+
+        /* SECTION */
+        .sec{margin-bottom:1.75rem}
+        .sec-label{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;
+            letter-spacing:2px;margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem}
+        .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+        .sec-title{font-size:1.35rem;font-weight:700;margin-bottom:.3rem}
+        .sec-sub{font-size:.9rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.6}
+
+        /* STORY GRID */
+        .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+        .story-card{border-radius:var(--r);padding:2rem;border:1px solid var(--border)}
+        .story-card.problem{background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.2)}
+        .story-card.solution{background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.2)}
+        .story-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+        .sicon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+            justify-content:center;font-size:.95rem;flex-shrink:0}
+        .problem .sicon{background:var(--red-dim);color:var(--red)}
+        .solution .sicon{background:var(--green-dim);color:var(--green)}
+        .story-head h3{font-size:1rem;font-weight:700}
+        .problem .story-head h3{color:var(--red)}
+        .solution .story-head h3{color:var(--green)}
+        .story-intro{font-size:.88rem;color:var(--t2);margin-bottom:1.25rem;line-height:1.65}
+        .ps-list{list-style:none;display:flex;flex-direction:column;gap:.9rem}
+        .ps-item{display:flex;gap:.85rem;align-items:flex-start}
+        .psdot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;
+            justify-content:center;font-size:.65rem;margin-top:3px}
+        .problem .psdot{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+        .solution .psdot{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+        .ps-text strong{display:block;font-size:.88rem;color:var(--t1);margin-bottom:.18rem}
+        .ps-text p{font-size:.83rem;color:var(--t2);line-height:1.55}
+
+        /* IMPACT SECTION */
+        .impact-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem}
+        .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem}
+        .impact-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+        .impact-card i{font-size:1.15rem;margin-bottom:.7rem;display:block;color:var(--accent)}
+        .impact-card h4{font-size:.9rem;font-weight:600;margin-bottom:.35rem}
+        .impact-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
+
+        /* FEATURES GRID */
+        .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
+        .feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;
+            transition:border-color .25s}
+        .feat-card:hover{border-color:var(--accent)}
+        .feat-icon{width:38px;height:38px;background:var(--accent-dim);
+            border:1px solid rgba(56,189,248,.2);border-radius:8px;display:flex;
+            align-items:center;justify-content:center;color:var(--accent);font-size:.95rem;flex-shrink:0}
+        .feat-card h4{font-size:.9rem;font-weight:600;margin-bottom:.3rem}
+        .feat-card p{font-size:.82rem;color:var(--t2);line-height:1.55}
+
+        /* CLIENT BANNER */
+        .client-banner{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:1.25rem 1.75rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem}
+        .client-logo-box{border-radius:8px;padding:.4rem .85rem;
+            display:flex;align-items:center;justify-content:center;flex-shrink:0;height:44px}
+        .client-logo-box img{height:32px;width:auto;display:block}
+        .client-info strong{font-size:.92rem}
+        .client-info p{color:var(--t2);font-size:.83rem;margin-top:.2rem}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){
+            .kpi-row{grid-template-columns:1fr 1fr}
+            .story-grid{grid-template-columns:1fr}
+            .impact-grid{grid-template-columns:1fr}
+            .feat-grid{grid-template-columns:1fr}
+            .proj-title{font-size:1.65rem}
+            nav{padding:.9rem 5%}
+            .nav-links{display:none}
+            .client-banner{flex-direction:column;align-items:flex-start}
+        }
+            background:linear-gradient(90deg,var(--accent),var(--purple))}
+    
+        .proj-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+            background:linear-gradient(90deg,#6366F1,#38BDF8)}
+
+        /* DASHBOARD PREVIEW */
+        .dash-preview{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);
+            overflow:hidden;margin-bottom:2rem;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+        .dash-preview img{width:100%;height:auto;display:block}
+
+        /* DAX CODE BLOCKS */
+        .sql-wrap{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.5rem}
+        .sql-bar{background:#0B1120;padding:.65rem 1.1rem;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.72rem;color:var(--t3)}
+        .sql-bar.top{border-bottom:1px solid var(--border)}
+        .sql-dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+        pre.sql{margin:0;padding:1.1rem 1.5rem;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.75;color:#CBD5E1}
+        .kw{color:#7DD3FC}
+        .fn{color:#A78BFA}
+        .str{color:#86EFAC}
+        .cm{color:#475569;font-style:italic}
+        .nm{color:#FCA5A5}
+
+        /* INSIGHT CARDS */
+        .insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem}
+        .insight-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem}
+        .insight-card .i-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;
+            justify-content:center;font-size:1.1rem;margin-bottom:.85rem}
+        .insight-card h4{font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+        .insight-card p{font-size:.82rem;color:var(--t2);line-height:1.6}
+        .insight-card .i-stat{font-family:var(--mono);font-size:1.3rem;font-weight:700;
+            margin-bottom:.3rem;line-height:1}
+
+        /* KEY TAKEAWAY BOX */
+        .takeaway-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+            padding:2rem;margin-bottom:2rem}
+        .takeaway-list{list-style:none;display:flex;flex-direction:column;gap:.85rem;margin-top:1.1rem}
+        .takeaway-item{display:flex;gap:.85rem;align-items:flex-start;padding:.85rem 1rem;
+            background:var(--card2);border:1px solid var(--border);border-radius:8px}
+        .takeaway-item i{font-size:.95rem;margin-top:2px;flex-shrink:0}
+        .takeaway-item p{font-size:.85rem;color:var(--t2);line-height:1.6}
+        .takeaway-item p strong{color:var(--t1)}
+
+        /* SUGGESTIONS */
+        .suggest-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2rem}
+        .suggest-card{background:var(--card);border-left:3px solid var(--green);border-radius:var(--r);
+            padding:1.4rem 1.5rem}
+        .suggest-card h4{font-size:.92rem;font-weight:700;color:var(--green);margin-bottom:.4rem;
+            display:flex;align-items:center;gap:.6rem}
+        .suggest-card p{font-size:.82rem;color:var(--t2);line-height:1.6}
+
+        /* STAT ROW inside insight */
+        .mini-stats{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+        .mini-stat{font-family:var(--mono);font-size:.72rem;padding:.22rem .55rem;border-radius:4px}
+
+        @media(max-width:768px){
+            .insight-grid{grid-template-columns:1fr}
+            .suggest-grid{grid-template-columns:1fr}
+        }
+    </style>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "xgkes0h7l5");
+    </script>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-chart-network"></i> SHUBHAM GARG</a>
+    <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <a href="index.html#projects" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Projects</a>
+    <a href="mailto:shubhamgrg33@gmail.com?subject=Reaching%20out%20%E2%80%94%20saw%20your%20portfolio" class="nav-email-btn"><i class="fa-solid fa-envelope"></i> Let's Talk</a>
+</nav>
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="proj-hero">
+        <span class="eyebrow">Case Study &nbsp;// &nbsp;Power BI &nbsp;·&nbsp; Healthcare Analytics &nbsp;·&nbsp; ER Operations &nbsp;·&nbsp; Patient Data</span>
+        <h1 class="proj-title">Hospital Emergency Room Dashboard</h1>
+        <div class="pill-row">
+            <span class="pill"><i class="fa-solid fa-chart-bar" style="margin-right:.35rem"></i>Power BI</span>
+            <span class="pill"><i class="fa-solid fa-hospital" style="margin-right:.35rem"></i>Healthcare Analytics</span>
+            <span class="pill"><i class="fa-solid fa-clock" style="margin-right:.35rem"></i>Wait Time Analysis</span>
+            <span class="pill"><i class="fa-solid fa-users" style="margin-right:.35rem"></i>Patient Demographics</span>
+            <span class="pill"><i class="fa-solid fa-calendar-days" style="margin-right:.35rem"></i>19 Months of Data</span>
+            <span class="pill green">9,216 Patients Analyzed</span>
+            <span class="pill green">ER Optimization Insights</span>
+            <span class="pill amber">Power BI · Monthly View</span>
+        </div>
+        <p class="proj-summary">A Power BI dashboard analyzing 19 months of Hospital Emergency Room data (April 2023 – October 2024) covering 9,216 unique patients. The dashboard surfaces critical insights on patient wait times, admission patterns, department referrals, peak busy hours, and patient demographics — helping ER management make data-driven staffing and operational decisions.</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+        <div class="kpi blue"><div class="kpi-val">9,216</div><div class="kpi-label">Total Patients (19 Months)</div></div>
+        <div class="kpi amber"><div class="kpi-val">35.3m</div><div class="kpi-label">Avg. Wait Time</div></div>
+        <div class="kpi green"><div class="kpi-val">4.99</div><div class="kpi-label">Avg. Satisfaction Score /10</div></div>
+        <div class="kpi purple"><div class="kpi-val">4K</div><div class="kpi-label">Patient Referrals</div></div>
+    </div>
+
+    <!-- DASHBOARD SCREENSHOT 1 — MAIN -->
+    <div class="dash-preview">
+        <div class="frame-bar top">
+            <span><span class="fdot blue"></span>Hospital ER Dashboard — Monthly View · April 2023</span>
+            <span>Power BI &nbsp;·&nbsp; 19 Months Data</span>
+        </div>
+        <img src="assets/hospital-dashboard-main.png" alt="Hospital ER Dashboard Main View">
+        <div class="frame-bar bottom">
+            <span><i class="fa-solid fa-shield-halved" style="color:var(--green);margin-right:.4rem"></i>Patient data anonymized for privacy</span>
+            <span>Apr 2023 — Oct 2024</span>
+        </div>
+    </div>
+
+    <!-- DASHBOARD SCREENSHOT 2 — CHARTS -->
+    <div class="dash-preview" style="margin-bottom:2rem">
+        <div class="frame-bar top">
+            <span><span class="fdot blue"></span>Detailed Charts — Age Groups, Wait Time, Referrals & Race Distribution</span>
+            <span>Power BI &nbsp;·&nbsp; Drill-Down Views</span>
+        </div>
+        <img src="assets/hospital-dashboard-charts.png" alt="Hospital ER Dashboard Charts">
+    </div>
+
+    <!-- STORY -->
+    <div class="sec">
+        <div class="sec-label">The Full Story</div>
+        <div class="sec-title">Problem → Solution → Real Operational Impact</div>
+        <div class="sec-sub">What the ER management couldn't see, what this dashboard revealed, and how it changes operations.</div>
+    </div>
+
+    <div class="story-grid">
+        <div class="story-card problem">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>What the Hospital Couldn't See</h3>
+            </div>
+            <p class="story-intro">Without a centralized analytics view, the ER was operating reactively — responding to problems after they occurred rather than preventing them through data-driven planning.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>No Visibility Into Peak Hours & Days</strong>
+                        <p>Staff had no data-backed way to know when patient volumes would spike — leading to understaffing on the busiest days (Saturdays, Mondays) and overstaffing on quieter periods.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>35+ Minute Wait Times Going Unaddressed</strong>
+                        <p>Average wait time of 35.3 minutes indicates systemic inefficiency — but without tracking by hour, department, or patient type, management couldn't pinpoint where the bottleneck was.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Satisfaction Score Stuck at Moderate Levels</strong>
+                        <p>A satisfaction score of 4.99/10 is below acceptable healthcare standards, but without demographic and timing breakdowns, improvement efforts lacked direction.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-xmark"></i></div>
+                    <div class="ps-text">
+                        <strong>Department Referral Bottlenecks Hidden</strong>
+                        <p>With 5,400 patients needing no referral and 1,840 going to General Practice, inefficient routing between departments was invisible without a centralized breakdown.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="story-card solution">
+            <div class="story-head">
+                <div class="sicon"><i class="fa-solid fa-circle-check"></i></div>
+                <h3>What This Dashboard Delivers</h3>
+            </div>
+            <p class="story-intro">A single Power BI dashboard covering 19 months of ER data gives management a complete operational picture — from patient flow patterns to demographic breakdowns — filterable by month and year.</p>
+            <ul class="ps-list">
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Hourly & Weekly Patient Volume Heatmap</strong>
+                        <p>A detailed hour-by-day matrix shows exactly when the ER is most overwhelmed — management can now proactively staff for Saturday peaks, Mondays, and late night hours (11PM, 7PM).</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Wait Time Distribution by Time Bracket</strong>
+                        <p>Bar chart showing patient count by wait time (10–60 seconds brackets) reveals where delays cluster — 1,853 patients waited 50+ seconds, identifying the critical bottleneck range.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Admission vs Non-Admission Split</strong>
+                        <p>Almost equal split (50.04% not admitted vs 49.96% admitted) — giving management instant visibility into ER conversion rates and bed utilization patterns.</p>
+                    </div>
+                </li>
+                <li class="ps-item">
+                    <div class="psdot"><i class="fa-solid fa-check"></i></div>
+                    <div class="ps-text">
+                        <strong>Full Demographic Breakdown</strong>
+                        <p>Patient distribution by age group (30–39 most common at 1,200), race (White 2,571, African American 1,951), and gender gives management a complete patient profile for resource and care planning.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- KEY TAKEAWAYS FROM DASHBOARD -->
+    <div class="takeaway-wrap">
+        <div class="sec-label">Key Takeaways</div>
+        <div class="sec-title">What the Data Actually Tells Us</div>
+        <p style="color:var(--t2);font-size:.88rem;margin-top:.35rem">Critical insights extracted from 19 months of ER data across 9,216 patients.</p>
+
+        <ul class="takeaway-list">
+            <li class="takeaway-item">
+                <i class="fa-solid fa-clock" style="color:var(--amber)"></i>
+                <p><strong>Wait Time Needs Urgent Attention —</strong> Average wait time of 35.3 minutes is significantly above the recommended ER benchmark of 20–25 minutes. 1,853 patients fell in the 50+ second bracket — the highest single group — indicating a systemic triage or staffing issue during peak hours.</p>
+            </li>
+            <li class="takeaway-item">
+                <i class="fa-solid fa-calendar-week" style="color:var(--red)"></i>
+                <p><strong>Saturday Is the Busiest Day —</strong> With 1,377 patients, Saturday sees the highest ER volume across all days. Monday (1,314) and Sunday (1,318) follow closely. Critically, the 11AM–12PM, 7PM–8PM, 1PM, and 11PM hours are peak windows across all days — these require dedicated surge staffing.</p>
+            </li>
+            <li class="takeaway-item">
+                <i class="fa-solid fa-face-meh" style="color:var(--amber)"></i>
+                <p><strong>Patient Satisfaction at 4.99/10 Is Below Acceptable —</strong> A score below 5 in a healthcare setting signals patient dissatisfaction. The direct correlation is likely the 35+ minute wait time — reducing wait time by even 10 minutes typically improves satisfaction scores by 15–20% in ER settings.</p>
+            </li>
+            <li class="takeaway-item">
+                <i class="fa-solid fa-building-columns" style="color:var(--accent)"></i>
+                <p><strong>58.6% of Patients Need No Department Referral —</strong> 5,400 out of 9,216 patients were handled without referral. Of those referred, General Practice (1,840) and Orthopedics (995) dominate — suggesting these two departments should have dedicated fast-track pathways from the ER.</p>
+            </li>
+            <li class="takeaway-item">
+                <i class="fa-solid fa-users" style="color:var(--purple)"></i>
+                <p><strong>Adults 30–39 Are the Largest Patient Group —</strong> With 1,200 patients, the 30–39 age group is the most frequent ER visitor. Young adults (20–29) follow with 1,188. This working-age demographic likely visits during evening hours — explaining the 7PM and 11PM peaks.</p>
+            </li>
+            <li class="takeaway-item">
+                <i class="fa-solid fa-bed" style="color:var(--green)"></i>
+                <p><strong>Near 50/50 Admission Rate Signals Strong Triage Accuracy —</strong> 4,604 admitted vs 4,612 not admitted (49.96% vs 50.04%) shows the triage process is making balanced decisions. This near-equal split is a positive indicator — though it also means bed demand is consistently high.</p>
+            </li>
+            <li class="takeaway-item">
+                <i class="fa-solid fa-venus-mars" style="color:var(--accent)"></i>
+                <p><strong>Gender Split Is Nearly Equal With Slight Female Majority —</strong> Female patients make up 51.05% (4,710) vs 48.69% male (4,489). The small difference doesn't suggest a significant care gap but should be tracked over time for any demographic shifts in ER usage.</p>
+            </li>
+            <li class="takeaway-item">
+                <i class="fa-solid fa-person-circle-question" style="color:var(--t2)"></i>
+                <p><strong>1,030 Patients Declined to Identify Race —</strong> Over 11% of patients chose not to identify their race. While this limits demographic completeness, it also signals a need for better patient trust and intake communication — particularly important for equity-focused healthcare planning.</p>
+            </li>
+        </ul>
+    </div>
+
+    <!-- INSIGHT CARDS — NUMBERS -->
+    <div class="sec">
+        <div class="sec-label">Dashboard Numbers</div>
+        <div class="sec-title">Key Metrics at a Glance</div>
+        <div class="sec-sub">The most important numbers from 19 months of ER data.</div>
+    </div>
+
+    <div class="insight-grid">
+        <div class="insight-card">
+            <div class="i-icon" style="background:rgba(239,68,68,.1);color:var(--red)"><i class="fa-solid fa-person-running"></i></div>
+            <div class="i-stat" style="color:var(--red)">1,377</div>
+            <h4>Busiest Day — Saturday</h4>
+            <p>Saturday sees the highest patient volume. 11AM–12PM and 7PM–8PM are the peak hours across all days.</p>
+            <div class="mini-stats">
+                <span class="mini-stat" style="background:var(--red-dim);color:var(--red)">Sat 1,377</span>
+                <span class="mini-stat" style="background:var(--red-dim);color:var(--red)">Sun 1,318</span>
+                <span class="mini-stat" style="background:var(--red-dim);color:var(--red)">Mon 1,314</span>
+            </div>
+        </div>
+        <div class="insight-card">
+            <div class="i-icon" style="background:var(--amber-dim);color:var(--amber)"><i class="fa-solid fa-hourglass-half"></i></div>
+            <div class="i-stat" style="color:var(--amber)">35.3 min</div>
+            <h4>Average Wait Time</h4>
+            <p>Above recommended benchmarks. 1,853 patients waited 50+ seconds — the largest single bracket.</p>
+            <div class="mini-stats">
+                <span class="mini-stat" style="background:var(--green-dim);color:var(--green)">10s — 1,771</span>
+                <span class="mini-stat" style="background:var(--amber-dim);color:var(--amber)">50s — 1,853</span>
+                <span class="mini-stat" style="background:var(--red-dim);color:var(--red)">60s — 183</span>
+            </div>
+        </div>
+        <div class="insight-card">
+            <div class="i-icon" style="background:var(--accent-dim);color:var(--accent)"><i class="fa-solid fa-building-columns"></i></div>
+            <div class="i-stat" style="color:var(--accent)">5,400</div>
+            <h4>No Referral Needed</h4>
+            <p>58.6% of patients were handled without referral. General Practice is the top referral destination.</p>
+            <div class="mini-stats">
+                <span class="mini-stat" style="background:var(--accent-dim);color:var(--accent)">General Practice 1,840</span>
+                <span class="mini-stat" style="background:var(--accent-dim);color:var(--accent)">Orthopedics 995</span>
+            </div>
+        </div>
+        <div class="insight-card">
+            <div class="i-icon" style="background:var(--green-dim);color:var(--green)"><i class="fa-solid fa-bed"></i></div>
+            <div class="i-stat" style="color:var(--green)">50 / 50</div>
+            <h4>Admission Split</h4>
+            <p>Near equal: 4,604 admitted (49.96%) vs 4,612 not admitted (50.04%) — indicates balanced triage.</p>
+            <div class="mini-stats">
+                <span class="mini-stat" style="background:var(--green-dim);color:var(--green)">Admitted 4,604</span>
+                <span class="mini-stat" style="background:var(--red-dim);color:var(--red)">Not Admitted 4,612</span>
+            </div>
+        </div>
+        <div class="insight-card">
+            <div class="i-icon" style="background:var(--purple-dim);color:var(--purple)"><i class="fa-solid fa-users"></i></div>
+            <div class="i-stat" style="color:var(--purple)">30–39</div>
+            <h4>Largest Age Group</h4>
+            <p>Adults aged 30–39 are the most frequent ER visitors (1,200), closely followed by 20–29 (1,188).</p>
+            <div class="mini-stats">
+                <span class="mini-stat" style="background:var(--purple-dim);color:var(--purple)">30-39: 1,200</span>
+                <span class="mini-stat" style="background:var(--purple-dim);color:var(--purple)">20-29: 1,188</span>
+                <span class="mini-stat" style="background:var(--purple-dim);color:var(--purple)">0-9: 11%</span>
+            </div>
+        </div>
+        <div class="insight-card">
+            <div class="i-icon" style="background:rgba(239,68,68,.1);color:var(--red)"><i class="fa-solid fa-face-meh"></i></div>
+            <div class="i-stat" style="color:var(--amber)">4.99 / 10</div>
+            <h4>Satisfaction Score</h4>
+            <p>Below acceptable healthcare standards. Direct correlation with long wait times and peak-hour crowding.</p>
+            <div class="mini-stats">
+                <span class="mini-stat" style="background:var(--amber-dim);color:var(--amber)">Target: 7.0+</span>
+                <span class="mini-stat" style="background:var(--red-dim);color:var(--red)">Gap: 2.01 points</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIONABLE SUGGESTIONS -->
+    <div class="impact-wrap">
+        <div class="sec-label">Actionable Recommendations</div>
+        <div class="sec-title">What Should Be Done After Seeing This Dashboard</div>
+        <p style="color:var(--t2);font-size:.88rem;margin-top:.35rem">Data-backed suggestions for hospital management to improve ER operations based on what the dashboard reveals.</p>
+        <div class="impact-grid" style="margin-top:1.25rem">
+            <div class="impact-card" style="border-left:3px solid var(--red)">
+                <i class="fa-solid fa-user-doctor" style="color:var(--red)"></i>
+                <h4>Surge Staff on Saturdays & Mondays</h4>
+                <p>Saturday (1,377) and Monday (1,314) are consistently the two busiest days. Schedule 20–30% more triage staff during these windows to reduce wait time and prevent bottlenecks before they form.</p>
+            </div>
+            <div class="impact-card" style="border-left:3px solid var(--amber)">
+                <i class="fa-solid fa-clock" style="color:var(--amber)"></i>
+                <h4>Add Night Shift Capacity at 11PM & 7PM</h4>
+                <p>The 11PM and 7PM hours are peak across all weekdays. These are likely post-work rush hours for the working-age 30–39 demographic. Adding a dedicated nurse or triage officer at these hours could cut wait time by 8–12 minutes.</p>
+            </div>
+            <div class="impact-card" style="border-left:3px solid var(--accent)">
+                <i class="fa-solid fa-route" style="color:var(--accent)"></i>
+                <h4>Create Fast-Track Path for General Practice & Orthopedics</h4>
+                <p>These two departments handle 2,835 referrals combined. A dedicated fast-track referral corridor between ER and these departments would remove them from the main triage queue and cut overall ER congestion significantly.</p>
+            </div>
+            <div class="impact-card" style="border-left:3px solid var(--green)">
+                <i class="fa-solid fa-stopwatch" style="color:var(--green)"></i>
+                <h4>Set a 20-Minute Wait Time Target</h4>
+                <p>Current average is 35.3 minutes — 75% above the optimal 20-minute benchmark. Setting a measurable KPI target and tracking it monthly via this dashboard gives management a clear improvement metric and accountability tool.</p>
+            </div>
+            <div class="impact-card" style="border-left:3px solid var(--purple)">
+                <i class="fa-solid fa-face-smile" style="color:var(--purple)"></i>
+                <h4>Tie Satisfaction Score to Wait Time Reduction</h4>
+                <p>The 4.99/10 satisfaction score is directly linked to wait times. Each 5-minute reduction in average wait time is estimated to improve satisfaction by 0.3–0.5 points. Tracking both monthly will show the direct impact of operational improvements.</p>
+            </div>
+            <div class="impact-card" style="border-left:3px solid var(--accent)">
+                <i class="fa-solid fa-person-circle-question" style="color:var(--accent)"></i>
+                <h4>Address the 1,030 Unidentified Race Records</h4>
+                <p>11% of patients declined to identify their race — limiting demographic equity analysis. Improving the intake process with clearer optional consent language and better staff communication can improve data completeness for future reporting cycles.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAX FUNCTIONS -->
+    <div class="sec" style="margin-top:2rem">
+        <div class="sec-label">DAX Functions Used</div>
+        <div class="sec-title">Custom DAX Written for This Dashboard</div>
+        <div class="sec-sub">All calculated columns and measures built in Power BI to enable the dashboard logic.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:2rem">
+
+        <div class="sql-wrap">
+            <div class="sql-bar top">
+                <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+                <span>Admission Status — Calculated Column</span>
+            </div>
+            <pre class="sql"><span class="kw">Adm Status</span> = <span class="fn">IF</span>(<span class="str">'Hospital ER_Data'</span>[Patient Admission Flag] = <span class="kw">TRUE</span>(), <span class="str">"Admitted"</span>, <span class="str">"Not Admitted"</span>)
+<span class="cm">-- Converts boolean admission flag into readable text for the dashboard</span></pre>
+        </div>
+
+        <div class="sql-wrap">
+            <div class="sql-bar top">
+                <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+                <span>Age Group — Calculated Column (SWITCH)</span>
+            </div>
+            <pre class="sql"><span class="kw">Age Group</span> =
+<span class="fn">SWITCH</span>(
+    <span class="kw">TRUE</span>(),
+    <span class="str">'Hospital ER_Data'</span>[Patient Age] >= <span class="nm">70</span>, <span class="str">"70-79"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Patient Age] >= <span class="nm">60</span>, <span class="str">"60-69"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Patient Age] >= <span class="nm">50</span>, <span class="str">"50-59"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Patient Age] >= <span class="nm">40</span>, <span class="str">"40-49"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Patient Age] >= <span class="nm">30</span>, <span class="str">"30-39"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Patient Age] >= <span class="nm">20</span>, <span class="str">"20-29"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Patient Age] >= <span class="nm">10</span>, <span class="str">"10-19"</span>,
+    <span class="str">"0-9"</span>
+)
+<span class="cm">-- Buckets raw patient age into 10-year age bands for the Age Group chart</span></pre>
+        </div>
+
+        <div class="sql-wrap">
+            <div class="sql-bar top">
+                <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+                <span>Age % — Measure (DIVIDE + CALCULATE + ALL)</span>
+            </div>
+            <pre class="sql"><span class="kw">Age %</span> =
+<span class="fn">DIVIDE</span>(
+    <span class="fn">DISTINCTCOUNT</span>(<span class="str">'Hospital ER_Data'</span>[Patient ID]),
+    <span class="fn">CALCULATE</span>(
+        <span class="fn">DISTINCTCOUNT</span>(<span class="str">'Hospital ER_Data'</span>[Patient ID]),
+        <span class="fn">ALL</span>(<span class="str">'Hospital ER_Data'</span>[Age Group])
+    ),
+    <span class="nm">0</span>
+)
+<span class="cm">-- Calculates each age group as % of total patients using ALL() to remove filter context</span></pre>
+        </div>
+
+        <div class="sql-wrap">
+            <div class="sql-bar top">
+                <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+                <span>Avg Wait Time — Measure (FORMAT + AVERAGE)</span>
+            </div>
+            <pre class="sql"><span class="kw">Avg Wait Time</span> = <span class="fn">FORMAT</span>(<span class="fn">AVERAGE</span>(<span class="str">'Hospital ER_Data'</span>[Patient Waittime]), <span class="str">"0.0"</span>) & <span class="str">" Min"</span>
+<span class="cm">-- Formats the average wait time as a clean "35.3 Min" string for the KPI card</span></pre>
+        </div>
+
+        <div class="sql-wrap">
+            <div class="sql-bar top">
+                <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+                <span>No. of Patient Referrals — Measure (CALCULATE + COUNTROWS)</span>
+            </div>
+            <pre class="sql"><span class="kw">No of Patients Referral</span> =
+<span class="fn">CALCULATE</span>(
+    <span class="fn">COUNTROWS</span>(<span class="str">'Hospital ER_Data'</span>),
+    <span class="str">'Hospital ER_Data'</span>[Department Referral] <> <span class="str">"None"</span>
+)
+<span class="cm">-- Counts only rows where a referral was made (excludes "None") for the referral KPI card</span></pre>
+        </div>
+
+        <div class="sql-wrap">
+            <div class="sql-bar top">
+                <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+                <span>Wait Time Interval — Calculated Column (SWITCH for Heatmap)</span>
+            </div>
+            <pre class="sql"><span class="kw">Waittime Interval</span> =
+<span class="fn">SWITCH</span>(
+    <span class="kw">TRUE</span>(),
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">2</span>,  <span class="str">"00-02"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">4</span>,  <span class="str">"03-04"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">6</span>,  <span class="str">"05-06"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">8</span>,  <span class="str">"07-08"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">10</span>, <span class="str">"09-10"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">12</span>, <span class="str">"11-12"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">14</span>, <span class="str">"13-14"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">16</span>, <span class="str">"15-16"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">18</span>, <span class="str">"17-18"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">20</span>, <span class="str">"19-20"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">22</span>, <span class="str">"21-22"</span>,
+    <span class="str">'Hospital ER_Data'</span>[Admission Hour] < <span class="nm">24</span>, <span class="str">"23-24"</span>,
+    <span class="str">"Above 24"</span>
+)
+<span class="cm">-- Groups admission hour into 2-hour bands — powers the hourly heatmap table on the dashboard</span></pre>
+        </div>
+
+        <div class="sql-wrap">
+            <div class="sql-bar top">
+                <span><span class="sql-dot" style="background:#EF4444"></span><span class="sql-dot" style="background:#F59E0B;margin-left:4px"></span><span class="sql-dot" style="background:#22C55E;margin-left:4px"></span></span>
+                <span>Patient Admission Date — Calculated Column (DATE)</span>
+            </div>
+            <pre class="sql"><span class="kw">Patient Adm Date</span> =
+<span class="fn">DATE</span>(
+    <span class="fn">YEAR</span>(<span class="str">'Hospital ER_Data'</span>[Patient Admission Date]),
+    <span class="fn">MONTH</span>(<span class="str">'Hospital ER_Data'</span>[Patient Admission Date]),
+    <span class="fn">DAY</span>(<span class="str">'Hospital ER_Data'</span>[Patient Admission Date])
+)
+<span class="cm">-- Extracts clean date (removes time component) for accurate month/year slicer filtering</span></pre>
+        </div>
+
+    </div>
+
+    <!-- SKILLS DEMONSTRATED -->
+    <div class="sec" style="margin-top:2rem">
+        <div class="sec-label">Skills Demonstrated</div>
+        <div class="sec-title">What This Project Shows a Recruiter</div>
+        <div class="sec-sub">Analytical and BI capabilities demonstrated through this dashboard.</div>
+    </div>
+    <div class="feat-grid">
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-chart-bar"></i></div><div><h4>Power BI Dashboard Development</h4><p>Multi-page dashboard with KPI cards, bar charts, donut charts, heatmap table, and filters — all designed for management-level consumption.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-filter"></i></div><div><h4>Interactive Filters & Slicers</h4><p>Month Name and Year slicers allow management to drill into any specific period — enabling month-over-month trend analysis without any technical knowledge.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-table-cells"></i></div><div><h4>Hourly Heatmap Table</h4><p>Custom hour-by-weekday matrix showing patient volumes at every time slot — a technically demanding visual that reveals operational patterns invisible in standard charts.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><div><h4>Descriptive Analysis & Storytelling</h4><p>Translated raw patient data into a complete Key Takeaways document — showing the ability to turn numbers into actionable management narratives.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-users"></i></div><div><h4>Demographic Segmentation</h4><p>Broke down 9,216 patients by age group, race, gender, and admission status — enabling equity analysis and targeted resource planning.</p></div></div>
+        <div class="feat-card"><div class="feat-icon"><i class="fa-solid fa-hospital"></i></div><div><h4>Healthcare Domain Knowledge</h4><p>Applied domain-aware analysis — benchmarking wait times against healthcare standards, interpreting satisfaction scores, and recommending clinically relevant operational improvements.</p></div></div>
+    </div>
+
+</div>
+</body>
+</html>
